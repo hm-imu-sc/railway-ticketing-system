@@ -1,24 +1,168 @@
+@import "../layouts/_navbar";
 
-// @import "../utils/_reset";
-// @import "../layouts/_navbar";
+$color: #2a882c;
 
-
-* {
-    font-family: ;
-    font-size: 25px;
-    text-decoration: none;
-    margin: 0;
-    padding: 0;
-    background-color: #b3c6b1;
+h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 7%;
+    color: $color;
+    border-top: 3px solid $color;
+    border-bottom: 3px solid $color;
+    padding: 20px;
+    width: 350px;
+    margin: 10% auto 0;
 }
 
-.navbar {   
+.destination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 
-    
+    div {
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
 
-    border: 3px solid #E9EFC0;
-    background-color: #E9EFC0;
+        * {
+            color: $color;
+        }
 
+        label {
+            font-size: 20px;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid $color;
+            border-radius: 10px;
+            width: 400px;
+
+            option {
+                font-size: 20px;
+                background-color: #E9EFC0;
+            }
+        }
+    }
+}
+
+h2 {
+    margin: 20px auto;
+    border: 2px solid $color;
+    border-radius: 10px;
+    font-size: 20px;
+    color: $color;
+    text-align: center;
+    width: 300px;
+    padding: 10px;
+}
+
+.date_picker {
+    width: 820px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+
+    button {
+        border: none;
+        cursor: pointer;
+
+        i {
+            border: 2px solid $color;
+            border-radius: 15px;
+            padding: 30px;
+            color: $color;
+            font-size: 40px;
+        }        
+
+        &:hover i {
+            color: #E9EFC0;
+            background-color: $color;
+        }
+    }
+
+    .date_part {
+        display: flex;
+        flex-direction: row;
+        margin: 0 15px;
+
+        .day_date {
+            margin: 10px;
+
+            label {
+                display: flex;
+                flex-direction: column;
+                
+                div {
+                    color: $color;
+                    text-align: center;
+                    padding: 10px;
+                    border: 1px solid $color;
+                }
+
+                div:nth-child(1) {
+                    background-color: $color;
+                    color: #E9EFC0;
+                    border-top-right-radius: 10px;
+                }
+
+                div:nth-child(2) {
+                    border-bottom-left-radius: 10px;
+                    cursor: pointer;
+                    &:hover {
+                        border-color: #C55A11;
+                        background-color: #C55A11;
+                        color: #E9EFC0;
+                    }
+                }
+            }
+
+            label.active {
+                div {
+                    border-color: #C55A11;
+                    background-color: #C55A11;
+                    color: #E9EFC0;
+                }
+            }
+        }
+
+        input {
+            display: none;
+        }
+    }
+}
+
+.train_list {
+    border: 2px solid $color;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 900px;
+
+    margin: 15px auto;
+
+    th, td {
+        padding: 10px 25px;
+        text-align: center;
+    }
+
+    tbody {
+        tr {
+            * {
+                background-color: transparent;
+            }
+        }
+
+        tr:nth-child(even) {
+            td {
+                background-color: #b5e197f6;
+            }
+        }
+
+        tr:nth-child(odd) {
+            td {
+                background-color: #b5e19783;
+            }
+        }        
+    }
 }
