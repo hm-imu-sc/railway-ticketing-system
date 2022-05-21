@@ -3,7 +3,7 @@ from my_modules.base_views import TemplateContextView, NoTemplateView
 from main.models import Station
 from django.shortcuts import render,redirect
 
-class Home(TemplateContextView):
+class HomePage(TemplateContextView):
     def get_template(self):
         return 'home_page.html'
 
