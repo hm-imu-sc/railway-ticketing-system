@@ -13,7 +13,7 @@
         
         <h1>Register as a passenger</h1>
 
-        <form action="">
+        <form action="{% url 'main:passenger_registration' %}" method="POST">
             {% csrf_token %}
 
             <div class="form_control_block">

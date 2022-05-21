@@ -1,7 +1,8 @@
 
 from my_modules.base_views import TemplateContextView, NoTemplateView
-from main.models import Station
+from main.models import Station, Passenger
 from django.shortcuts import render,redirect
+from hashlib import sha256
 
 class HomePage(TemplateContextView):
     def get_template(self):
@@ -10,6 +11,25 @@ class HomePage(TemplateContextView):
 class PassengerRegistrationPage(TemplateContextView):
     def get_template(self):
         return 'passenger_registration_page.html'
+
+class PassengerRegistration(NoTemplateView):
+    def act(self, request, *args, **kwargs):
+        nid = request.POST.get("nid")
+        name = request.POST.get("name")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        Passenger.objects.create(
+            nid         = nid,
+            name        = name,
+            email       = email,
+            username    = username,
+            password    = sha256(password.encode("ASCII")).hexdigest()
+        )
+
+    def get_redirection(self):
+        return 'main:passenger_registration_page'
 
 class AddStationPage(TemplateContextView):
     def get_template(self):
