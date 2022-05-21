@@ -1,4 +1,5 @@
 @import "../layouts/_navbar";
+@import "../utils/_scroll";
 
 $color: #2a882c;
 
@@ -11,7 +12,7 @@ h1 {
     border-bottom: 3px solid $color;
     padding: 20px;
     width: 350px;
-    margin: 10% auto 0;
+    margin: 7% auto 0;
 }
 
 .destination {
@@ -134,35 +135,130 @@ h2 {
 }
 
 .train_list {
+
     border: 2px solid $color;
     border-radius: 10px;
+    margin: 15px auto;
     overflow: hidden;
     width: 900px;
+    max-height: 320px;
+    overflow: auto;
 
-    margin: 15px auto;
+    table {
+        // border: 1px solid $color;
+        width: 100%;
 
-    th, td {
-        padding: 10px 25px;
-        text-align: ce;
-    }
+        th, td {
+            padding: 10px 25px;
+            text-align: center;
+        }
 
-    tbody {
-        tr {
-            * {
-                background-color: transparent;
+        th {
+            color: $color;
+            border-right: 1px solid $color;
+            border-bottom: 1px solid $color;
+
+            i {
+                color: $color;
             }
         }
 
-        tr:nth-child(even) {
-            td {
-                background-color: #b5e197f6;
-            }
+        th:nth-last-child(1) {
+            border-right: none;
         }
 
-        tr:nth-child(odd) {
-            td {
-                background-color: #b5e19783;
+        tbody {
+            tr {
+                * {
+                    background-color: transparent;
+                    color: rgb(11, 90, 8);
+                    font-size: 20px;
+                }
+                
+                td {
+                    border-bottom: 1px solid #b3c6b1;
+                    border-left: 1px solid #b3c6b1;
+                }
             }
-        }        
+
+            tr:nth-child(even) {
+                td {
+                    background-color: #b5e197f6;
+                }
+            }
+
+            tr:nth-child(odd) {
+                td {
+                    background-color: #b5e19783;
+                }
+            }        
+
+            td:nth-last-child(1) {
+                .seat_status {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    
+                    border: 2px solid $color;
+                    border-radius: 10px;
+                    width: 50px;
+                    margin: 0 auto;
+
+                    padding: 2px;
+
+                    div {
+                        border: 2px solid $color;
+                        border-radius: 5px;
+                        margin: 5px;
+                        padding: 5px;
+                        // background-color: transparent;
+                    }
+
+                    &:hover {
+                        background-color: #E9EFC0;
+                    }
+
+                    // &:hover div {
+                    //     background-color: ;
+                    // }
+                }
+
+                .status_25 {
+                    div:nth-child(1) {
+                        background-color: $color;
+                    }
+                }
+
+                .status_50 {
+                    div:nth-child(1) {
+                        background-color: $color;
+                    }
+
+                    div:nth-child(4) {
+                        background-color: $color;
+                    }
+                }
+
+                .status_75 {
+                    div {
+                        background-color: $color;
+                    }
+
+                    div:nth-child(4) {
+                        background-color: transparent;
+                    }
+                }
+
+                .status_100 {
+                    div {
+                        background-color: $color;
+                    }
+                }
+            }
+        }
     }
 }
+
+
