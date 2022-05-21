@@ -8,9 +8,11 @@ class HomePage(TemplateContextView):
     def get_template(self):
         return 'home_page.html'
 
+
 class PassengerRegistrationPage(TemplateContextView):
     def get_template(self):
         return 'passenger_registration_page.html'
+
 
 class PassengerRegistration(NoTemplateView):
     def act(self, request, *args, **kwargs):
@@ -31,9 +33,16 @@ class PassengerRegistration(NoTemplateView):
     def get_redirection(self):
         return 'main:passenger_registration_page'
 
+
+class LoginPage(TemplateContextView):
+    def get_template(self):
+        return 'login_page.html'
+
+
 class AddStationPage(TemplateContextView):
     def get_template(self):
         return 'add_station.html'
+
 
 def addStation(request):
         if request.method == 'POST':

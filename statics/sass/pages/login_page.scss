@@ -1,0 +1,60 @@
+@import "../utils/_variables";
+@import "../layouts/_navbar";
+@import "../utils/_scroll";
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 7%;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
+    padding: 20px;
+    width: 260px;
+    margin: 13% auto 0;
+}
+
+form {
+    // border: 2px solid $color_default;
+    // border-radius: 15px;
+    padding: 10px;
+    width: 900px;
+    margin: 40px auto;
+
+    display: flex;
+    flex-direction: column;
+
+    .form_control_block {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 10px;
+
+        .form_control {
+            display: flex;
+            flex-direction: column;
+
+            label {
+                margin-left: 5px;
+                margin-bottom: 3px;
+                font-size: 20px;
+                color: $color_default;
+            }
+            
+            input {
+                border: 2px solid $color_default;
+                border-radius: 15px;
+                padding: 20px;      
+                color: $color_default;
+            }
+
+            .submit {
+                cursor: pointer;
+                &:hover {
+                    color: #E9EFC0;
+                    background-color: $color_default;
+                }
+            }
+        }
+    }
+}
