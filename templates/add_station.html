@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Station</title>
+</head>
+<body>
+<form method="post" action="{% url 'main:add_station' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="station_name">Station Name</label><br>
+    <input type="text" id="station_name" name="station_name" required><br><br>
+    <label for="station_location">Station Location</label><br>
+    <input type="text" id="station_location" name="station_location" required><br><br>
+    <label for="station_description">Station Description</label><br>
+    <input type="text" id="station_description" name="station_description"><br><br>
+    <input type="submit" value="Add">
+</form>
+</body>
+</html>
