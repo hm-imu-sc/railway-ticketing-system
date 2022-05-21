@@ -7,6 +7,10 @@ class HomePage(TemplateContextView):
     def get_template(self):
         return 'home_page.html'
 
+class PassengerRegistrationPage(TemplateContextView):
+    def get_template(self):
+        return 'passenger_registration_page.html'
+
 class AddStationPage(TemplateContextView):
     def get_template(self):
         return 'add_station.html'

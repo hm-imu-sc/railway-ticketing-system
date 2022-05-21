@@ -1,10 +1,13 @@
+
+@import "_variables";
+
 * {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
     text-decoration: none;
     margin: 0;
     padding: 0;
-    background-color: #b3c6b1;
+    background-color: $background_color_default;
     color: black;
 
     &:focus {
@@ -15,3 +18,5 @@
         outline: none;
     }
 }
+
+// #b3c6b1

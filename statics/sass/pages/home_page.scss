@@ -1,15 +1,15 @@
+
+@import "../utils/_variables";
 @import "../layouts/_navbar";
 @import "../utils/_scroll";
-
-$color: #2a882c;
 
 h1 {
     font-size: 50px;
     text-align: center;
     margin-top: 7%;
-    color: $color;
-    border-top: 3px solid $color;
-    border-bottom: 3px solid $color;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
     padding: 20px;
     width: 350px;
     margin: 7% auto 0;
@@ -26,7 +26,7 @@ h1 {
         flex-direction: column;
 
         * {
-            color: $color;
+            color: $color_default;
         }
 
         label {
@@ -35,7 +35,7 @@ h1 {
 
         select {
             padding: 10px;
-            border: 2px solid $color;
+            border: 2px solid $color_default;
             border-radius: 10px;
             width: 400px;
 
@@ -49,10 +49,10 @@ h1 {
 
 h2 {
     margin: 20px auto;
-    border: 2px solid $color;
+    border: 2px solid $color_default;
     border-radius: 10px;
     font-size: 20px;
-    color: $color;
+    color: $color_default;
     text-align: center;
     width: 300px;
     padding: 10px;
@@ -70,16 +70,16 @@ h2 {
         cursor: pointer;
 
         i {
-            border: 2px solid $color;
+            border: 2px solid $color_default;
             border-radius: 15px;
             padding: 30px;
-            color: $color;
+            color: $color_default;
             font-size: 40px;
         }        
 
         &:hover i {
             color: #E9EFC0;
-            background-color: $color;
+            background-color: $color_default;
         }
     }
 
@@ -96,14 +96,14 @@ h2 {
                 flex-direction: column;
                 
                 div {
-                    color: $color;
+                    color: $color_default;
                     text-align: center;
                     padding: 10px;
-                    border: 1px solid $color;
+                    border: 1px solid $color_default;
                 }
 
                 div:nth-child(1) {
-                    background-color: $color;
+                    background-color: $color_default;
                     color: #E9EFC0;
                     border-top-right-radius: 10px;
                 }
@@ -136,7 +136,7 @@ h2 {
 
 .train_list {
 
-    border: 2px solid $color;
+    border: 2px solid $color_default;
     border-radius: 10px;
     margin: 15px auto;
     overflow: hidden;
@@ -154,12 +154,12 @@ h2 {
         }
 
         th {
-            color: $color;
-            border-right: 1px solid $color;
-            border-bottom: 1px solid $color;
+            color: $color_default;
+            border-right: 1px solid $color_default;
+            border-bottom: 1px solid $color_default;
 
             i {
-                color: $color;
+                color: $color_default;
             }
         }
 
@@ -176,8 +176,8 @@ h2 {
                 }
                 
                 td {
-                    border-bottom: 1px solid #b3c6b1;
-                    border-left: 1px solid #b3c6b1;
+                    border-bottom: 1px solid $background_color_default;
+                    border-left: 1px solid $background_color_default;
                 }
             }
 
@@ -201,7 +201,7 @@ h2 {
                     justify-content: center;
                     flex-wrap: wrap;
                     
-                    border: 2px solid $color;
+                    border: 2px solid $color_default;
                     border-radius: 10px;
                     width: 50px;
                     margin: 0 auto;
@@ -209,7 +209,7 @@ h2 {
                     padding: 2px;
 
                     div {
-                        border: 2px solid $color;
+                        border: 2px solid $color_default;
                         border-radius: 5px;
                         margin: 5px;
                         padding: 5px;
@@ -227,23 +227,23 @@ h2 {
 
                 .status_25 {
                     div:nth-child(1) {
-                        background-color: $color;
+                        background-color: $color_default;
                     }
                 }
 
                 .status_50 {
                     div:nth-child(1) {
-                        background-color: $color;
+                        background-color: $color_default;
                     }
 
                     div:nth-child(4) {
-                        background-color: $color;
+                        background-color: $color_default;
                     }
                 }
 
                 .status_75 {
                     div {
-                        background-color: $color;
+                        background-color: $color_default;
                     }
 
                     div:nth-child(4) {
@@ -253,7 +253,7 @@ h2 {
 
                 .status_100 {
                     div {
-                        background-color: $color;
+                        background-color: $color_default;
                     }
                 }
             }
