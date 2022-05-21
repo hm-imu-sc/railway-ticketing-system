@@ -11,7 +11,46 @@
     <body>
         {% include "widgets/navbar.html" %}
         
-        
+        <h1>Register as a passenger</h1>
+
+        <form action="">
+            {% csrf_token %}
+
+            <div class="form_control_block">
+                <div class="form_control">
+                    <label for="name">Name:</label>
+                    <input id="name" type="text" name="name" required>
+                </div>
+                <div class="form_control">
+                    <label for="nid">NID:</label>
+                    <input id="nid" type="text" name="nid" required>
+                </div>
+            </div>
+
+            <div class="form_control_block">
+                <div class="form_control">
+                    <label for="username">Username:</label>
+                    <input id="username" type="text" name="username" required>
+                </div>
+                <div class="form_control">
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" name="email" required>
+                </div>
+            </div>
+
+            <div class="form_control_block">
+                <div class="form_control">
+                    <label for="password">Password:</label>
+                    <input id="password" type="password" name="password" required>
+                </div>
+                <div class="form_control">
+                    <label for="retype_password">Retype password:</label>
+                    <input id="retype_password" type="password" name="retype_password" required>
+                </div>
+            </div>
+
+            <input class="submit disabled" type="submit" value="Submit" disabled>
+        </form>
         
         <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'js/passenger_registration_page.js' %}"></script>
