@@ -11,8 +11,39 @@
     <body>
         {% include "widgets/navbar.html" %}
         
-        <h1></h1>
+        <h1>Select your seats</h1>
         
+        <div class="seat_criterias">
+            <div>
+                <label for="car_id">Car type: </label>
+                <select name="car_id" id="car_id">
+                    <option value="0">Select</option>
+                    {% for car in cars %}
+                        <option value="{{ car.id }}">{{ car.name }} - Fare: {{ car.fare }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="number_of_seats">Number of seats:</label>
+                <input id="number_of_seats" type="range" min="1" max="5" name="number_of_seats" value="1">
+                <span class="number_of_seats">1</span>
+            </div>
+            <div class="seats">
+                <span>Your seats:</span>
+                <span id="seats"></span>
+            </div>
+            <div class="controls">
+                <button class="check">Get Seats</button>
+                <button class="purchase">Purchase</button>
+            </div>  
+        </div>
+
+        <div class="bill_info">
+            <span>Total bill: </span>
+            <span class="bill"></span>
+            <button id="pay">Pay</button>
+        </div>
+
         <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'js/seat_selection_page.js' %}"></script>
     </body>

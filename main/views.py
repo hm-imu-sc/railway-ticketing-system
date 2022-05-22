@@ -62,11 +62,35 @@ class HomePage(TemplateContextView):
 
 class SeatSelectionPage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
-        train_id = kwargs['trian_id']
-        return {}
+        train_id = kwargs['train_id']
+        train = Train.objects.get(id=train_id)
+        return {
+            'cars': [
+                {
+                    'id': '1',
+                    'name': 'First Class Berth',
+                    'fare': '1500',
+                },
+                {
+                    'id': '2',
+                    'name': 'First Class Seat',
+                    'fare': '1250',
+                },
+                {
+                    'id': '3',
+                    'name': 'Shovan Chair',
+                    'fare': '750',
+                },
+                {
+                    'id': '4',
+                    'name': 'Shovan',
+                    'fare': '500',
+                },
+            ]
+        }
 
     def get_template(self):
-        pass
+        return 'seat_selection_page.html'
 
 
 class GetSchedule(TemplateContextView):

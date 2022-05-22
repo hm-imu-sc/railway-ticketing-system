@@ -9,6 +9,7 @@ function get_schedule() {
     $.ajax({
         'url': '/get_schedule/' + date + "/" + source + "/" + destination,
         'success': data => {
+            console.log(data);
             $('.train_list').html(data);
         }
     });
