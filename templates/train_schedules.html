@@ -30,7 +30,7 @@
                 </td>
                 {% if session.user.login_status %}
                     <td>
-                        <a href="#"><i class="fas fa-eye"></i></a>
+                        <a href="{% url 'main:seat_selection_page' train_id=train.train_id %}"><i class="fas fa-eye"></i></a>
                     </td>
                 {% endif %}
             </tr>        
