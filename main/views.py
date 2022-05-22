@@ -1,10 +1,6 @@
 
 from my_modules.base_views import TemplateContextView, NoTemplateView
-<<<<<<< HEAD
-from main.models import Station,Train,Car,Seat
-=======
-from main.models import Station, Passenger, Admin, Train
->>>>>>> main
+from main.models import Station, Passenger, Admin, Train, Car, Seat
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -238,12 +234,7 @@ class AddStationPage(TemplateContextView):
     def get_template(self):
         return 'add_station.html'
 
-<<<<<<< HEAD
 def add_station(request):
-=======
-
-def addStation(request):
->>>>>>> main
         if request.method == 'POST':
             st_name=request.POST.get('station_name')
             st_location=request.POST.get('station_location')
