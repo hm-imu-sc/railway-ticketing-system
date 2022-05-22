@@ -60,6 +60,15 @@ class HomePage(TemplateContextView):
         return 'home_page.html'
 
 
+class SeatSelectionPage(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        train_id = kwargs['trian_id']
+        return {}
+
+    def get_template(self):
+        pass
+
+
 class GetSchedule(TemplateContextView):
 
     def get_context(self, request, *args, **kwargs):
