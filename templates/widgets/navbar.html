@@ -1,15 +1,18 @@
 <div class="navbar">
     <div class="nav-item-primary">
         <a class="brand" href="{% url 'main:home_page' %}">Rail Trip</a>
-        <a class="nav-item" href="#">Home</a>
+        <a class="nav-item" href="{% url 'main:home_page' %}">Home</a>
         <a class="nav-item" href="#">Rail News</a>
-        <a class="nav-item" href="#">Tickets</a>
+        <a class="nav-item" href="{% url 'main:home_page' %}">Tickets</a>
     </div>
     <div class="nav-item-secondary">
-        <a class="nav-item" href="#">My Trips</a>
-        <a class="nav-item active" href="#">Profile</a>
-        <a class="nav-item" href="#">Register</a>
-        <a class="nav-item" href="#">Login</a>
-        <a class="nav-item" href="#">Logout</a>
+        {% if session.user.login_status %}
+            <a class="nav-item" href="#">My Trips</a>
+            <a class="nav-item active" href="#">Profile</a>
+            <a class="nav-item" href="{% url 'main:logout' %}">Logout</a>
+        {% else %}
+            <a class="nav-item" href="{% url 'main:passenger_registration_page' %}">Register</a>
+            <a class="nav-item" href="{% url 'main:login_page' %}">Login</a>
+        {% endif %}
     </div>
 </div>

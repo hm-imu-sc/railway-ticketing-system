@@ -1,4 +1,5 @@
 downloads
+.pyc
 .idea
 __pycache__
 .sass-cache

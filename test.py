@@ -3,6 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'railway_ticketing_system.settin
 import django
 django.setup()
 
+import datetime
 
 class Test1:
     @classmethod
@@ -15,9 +16,3 @@ class Test2(Test1):
     def respond(self, x, y):
         print(f"x+y={x+y}")
 
-
-test1 = Test2()
-
-fn = test1.as_view()
-
-fn(10, 23)

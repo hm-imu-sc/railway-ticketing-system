@@ -1,17 +1,18 @@
-@import "../layouts/_navbar";
 
-$color: #2a882c;
+@import "../utils/_variables";
+@import "../layouts/_navbar";
+@import "../utils/_scroll";
 
 h1 {
     font-size: 50px;
     text-align: center;
     margin-top: 7%;
-    color: $color;
-    border-top: 3px solid $color;
-    border-bottom: 3px solid $color;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
     padding: 20px;
     width: 350px;
-    margin: 10% auto 0;
+    margin: 7% auto 0;
 }
 
 .destination {
@@ -25,7 +26,7 @@ h1 {
         flex-direction: column;
 
         * {
-            color: $color;
+            color: $color_default;
         }
 
         label {
@@ -34,7 +35,7 @@ h1 {
 
         select {
             padding: 10px;
-            border: 2px solid $color;
+            border: 2px solid $color_default;
             border-radius: 10px;
             width: 400px;
 
@@ -48,10 +49,10 @@ h1 {
 
 h2 {
     margin: 20px auto;
-    border: 2px solid $color;
+    border: 2px solid $color_default;
     border-radius: 10px;
     font-size: 20px;
-    color: $color;
+    color: $color_default;
     text-align: center;
     width: 300px;
     padding: 10px;
@@ -69,16 +70,16 @@ h2 {
         cursor: pointer;
 
         i {
-            border: 2px solid $color;
+            border: 2px solid $color_default;
             border-radius: 15px;
             padding: 30px;
-            color: $color;
+            color: $color_default;
             font-size: 40px;
         }        
 
         &:hover i {
             color: #E9EFC0;
-            background-color: $color;
+            background-color: $color_default;
         }
     }
 
@@ -95,14 +96,14 @@ h2 {
                 flex-direction: column;
                 
                 div {
-                    color: $color;
+                    color: $color_default;
                     text-align: center;
                     padding: 10px;
-                    border: 1px solid $color;
+                    border: 1px solid $color_default;
                 }
 
                 div:nth-child(1) {
-                    background-color: $color;
+                    background-color: $color_default;
                     color: #E9EFC0;
                     border-top-right-radius: 10px;
                 }
@@ -125,6 +126,25 @@ h2 {
                     color: #E9EFC0;
                 }
             }
+
+            label.disabled {
+                div {
+                    border-color: black;
+                    background-color: black;
+                    color: #E9EFC0;
+                    cursor: default;
+
+                    &:hover {
+                        border-color: black;
+                        background-color: black;
+                        color: #E9EFC0;
+                    }
+                }
+            }
+        }
+
+        .week_hidden {
+            display: none;
         }
 
         input {
@@ -134,35 +154,153 @@ h2 {
 }
 
 .train_list {
-    border: 2px solid $color;
+
+    border: 2px solid $color_default;
     border-radius: 10px;
-    overflow: hidden;
-    width: 900px;
-
     margin: 15px auto;
+    overflow: hidden;
+    max-width: 1100px;
+    max-height: 320px;
+    min-height: 250px;
+    overflow: auto;
 
-    th, td {
-        padding: 10px 25px;
-        text-align: center;
-    }
+    table {
+        // border: 1px solid $color;
+        width: 100%;
 
-    tbody {
-        tr {
-            * {
-                background-color: transparent;
+        th, td {
+            padding: 10px 25px;
+            text-align: center;
+        }
+
+        th {
+            color: $color_default;
+            border-right: 1px solid $color_default;
+            border-bottom: 1px solid $color_default;
+
+            i {
+                color: $color_default;
             }
         }
 
-        tr:nth-child(even) {
-            td {
-                background-color: #b5e197f6;
-            }
+        th:nth-last-child(1) {
+            border-right: none;
         }
 
-        tr:nth-child(odd) {
-            td {
-                background-color: #b5e19783;
+        tbody {
+            tr {
+                * {
+                    background-color: transparent;
+                    color: rgb(11, 90, 8);
+                    font-size: 20px;
+                }
+                
+                td {
+                    border-bottom: 1px solid $background_color_default;
+                    border-left: 1px solid $background_color_default;
+                }
             }
-        }        
+
+            tr:nth-child(even) {
+                td {
+                    background-color: #b5e197f6;
+                }
+            }
+
+            tr:nth-child(odd) {
+                td {
+                    background-color: #b5e19783;
+                }
+            }        
+
+            td:nth-child(4) {
+                .seat_status {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    
+                    border: 2px solid $color_default;
+                    border-radius: 10px;
+                    width: 50px;
+                    margin: 0 auto;
+
+                    padding: 2px;
+
+                    div {
+                        border: 2px solid $color_default;
+                        border-radius: 5px;
+                        margin: 5px;
+                        padding: 5px;
+                        // background-color: transparent;
+                    }
+
+                    &:hover {
+                        background-color: #E9EFC0;
+                    }
+
+                    // &:hover div {
+                    //     background-color: ;
+                    // }
+                }
+
+                .status_0 {
+                    div {
+                        background-color: transparent;
+                    }
+                }
+
+                .status_25 {
+                    div:nth-child(1) {
+                        background-color: $color_default;
+                    }
+                }
+
+                .status_50 {
+                    div:nth-child(1) {
+                        background-color: $color_default;
+                    }
+
+                    div:nth-child(4) {
+                        background-color: $color_default;
+                    }
+                }
+
+                .status_75 {
+                    div {
+                        background-color: $color_default;
+                    }
+
+                    div:nth-child(4) {
+                        background-color: transparent;
+                    }
+                }
+
+                .status_100 {
+                    div {
+                        background-color: $color_default;
+                    }
+                }
+            }
+     
+            td:nth-child(5) {
+                a {
+                    border: 2px solid $color_default;
+                    border-radius: 10px;
+                    padding: 10px;   
+
+                    &:hover {
+                        background-color: $color_default;
+                    }
+
+                    &:hover i {
+                        color: #E9EFC0;
+                    }
+                }
+            }
+        }
     }
 }
+
+

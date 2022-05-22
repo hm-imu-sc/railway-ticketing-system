@@ -21,123 +21,121 @@
                 <label for="depart_from">Depart from:</label>
                 <select name="depart_from" id="depart_from">
                     <option value="0">Select</option>
-                    <option value="1">Dhaka</option>
-                    <option value="2">Chattagong</option>
-                    <option value="3">Rajshahi</option>
-                    <option value="4">Khulna</option>
-                    <option value="5">Barisal</option>
-                    <option value="6">Sylhet</option>
-                    <option value="7">Rangpur</option>
+                    {% for station in stations %}
+                        <option value="{{ station }}">{{ station }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div>
                 <label for="destination">Destination:</label>
                 <select name="destination" id="destination">
                     <option value="0">Select</option>
-                    <option value="1">Dhaka</option>
-                    <option value="2">Chattagong</option>
-                    <option value="3">Rajshahi</option>
-                    <option value="4">Khulna</option>
-                    <option value="5">Barisal</option>
-                    <option value="6">Sylhet</option>
-                    <option value="7">Rangpur</option>
+                    {% for station in stations %}
+                        <option value="{{ station }}">{{ station }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
 
-        <h2>Current Week</h2>
+        <h2 id="week_info">Current Week</h2>
 
         <div class="date_picker">
-            <button name="prev_week">
+            <button id="prev_week">
                 <i class="far fa-arrow-left"></i>
             </button>
 
             <div class="date_part">
-                <div class="day_date">
-                    <label for="day_1">
-                        <div class="day">Fri</div>
-                        <div class="date">20</div>
-                    </label>
-                    <input id="day_1" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label class="active" for="day_2">
-                        <div class="day">Sat</div>
-                        <div class="date">21</div>
-                    </label>
-                    <input id="day_2" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label for="day_3">
-                        <div class="day">Sun</div>
-                        <div class="date">22</div>
-                    </label>
-                    <input id="day_3" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label for="day_4">
-                        <div class="day">Mon</div>
-                        <div class="date">23</div>
-                    </label>
-                    <input id="day_4" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label for="day_5">
-                        <div class="day">Tue</div>
-                        <div class="date">24</div>
-                    </label>
-                    <input id="day_5" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label for="day_6">
-                        <div class="day">Wed</div>
-                        <div class="date">25</div>
-                    </label>
-                    <input id="day_6" type="radio" name="date">
-                </div>
-                <div class="day_date">
-                    <label for="day_7">
-                        <div class="day">Thu</div>
-                        <div class="date">26</div>
-                    </label>
-                    <input id="day_7" type="radio" name="date">
-                </div>
+
+                {% for day in week_0 %}
+                    <div class="day_date week_0">
+                        {% if day.date == today %}
+                            <label class="active" for="day_{{ day.date }}">
+                        {% elif day.backdate %}
+                            <label class="disabled" for="day_{{ day.date }}">
+                        {% else%}
+                            <label for="day_{{ day.date }}">
+                        {% endif %}
+                            <div class="day">{{ day.day }}</div>
+                            <div class="date">{{ day.date }}</div>
+                        </label>
+
+                        {% if day.date == today %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" selected>
+                        {% elif day.backdate %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" disabled>
+                        {% else%}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}">
+                        {% endif %}
+                    </div>                
+                {% endfor %}
+
+                {% for day in week_1 %}
+                    <div class="day_date week_1 week_hidden">
+                        {% if day.date == today %}
+                            <label class="active" for="day_{{ day.date }}">
+                        {% elif day.backdate %}
+                            <label class="disabled" for="day_{{ day.date }}">
+                        {% else%}
+                            <label for="day_{{ day.date }}">
+                        {% endif %}
+                            <div class="day">{{ day.day }}</div>
+                            <div class="date">{{ day.date }}</div>
+                        </label>
+
+                        {% if day.date == today %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" selected>
+                        {% elif day.backdate %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" disabled>
+                        {% else%}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}">
+                        {% endif %}
+                    </div>                
+                {% endfor %}
+
+                {% for day in week_2 %}
+                    <div class="day_date week_2 week_hidden">
+                        {% if day.date == today %}
+                            <label class="active" for="day_{{ day.date }}">
+                        {% elif day.backdate %}
+                            <label class="disabled" for="day_{{ day.date }}">
+                        {% else%}
+                            <label for="day_{{ day.date }}">
+                        {% endif %}
+                            <div class="day">{{ day.day }}</div>
+                            <div class="date">{{ day.date }}</div>
+                        </label>
+
+                        {% if day.date == today %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" selected>
+                        {% elif day.backdate %}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}" disabled>
+                        {% else%}
+                            <input id="day_{{ day.date }}" type="radio" name="date" value="{{ day.full_date }}">
+                        {% endif %}
+                    </div>                
+                {% endfor %}
             </div>
 
-            <button name="prev_week">
+            <button id="next_week">
                 <i class="far fa-arrow-right"></i>
             </button>
         </div>
 
-        <table class="train_list" border="0" cellspacing="0" cellpadding="0">
-            <thead>
-                <tr>
-                    <th>From <i class="far fa-long-arrow-right"></i> To</th>
-                    <th>Time</th>
-                    <th>Fare range</th>
-                    <th>Seat Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <span>Dhaka</span>
-                        <i class="far fa-long-arrow-right"></i>
-                        <span>Dhaka</span>
-                    </td>
-                    <td>03:00pm</td>
-                    <td><span class="fare_from">350</span>BDT - <span class="fare_from">1050</span>BDT</td>
-                    <td>
-                        <div class="seat_full_75">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="train_list">
+            <table border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <th>From <i class="far fa-long-arrow-right"></i> To</th>
+                        <th>Time</th>
+                        <th>Fare range</th>
+                        <th>Seat Status</th>
+                        {% if session.user.login_status %}
+                            <th>View seats</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+            </table>            
+        </div>
 
         <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'js/home_page.js' %}"></script>
