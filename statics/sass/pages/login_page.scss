@@ -48,6 +48,11 @@ form {
                 color: $color_default;
             }
 
+            input.error {
+                border-color: red;
+                color: red;
+            }
+
             .submit {
                 cursor: pointer;
                 &:hover {
