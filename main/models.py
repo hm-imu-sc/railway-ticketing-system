@@ -36,7 +36,7 @@ class Train(models.Model):
     tickets_available_from = models.DateField(null=True)
 
     def __str__(self):
-        return f'Train id = {self.id} || Starts from {self.source} || destination {self.destination}'
+        return f'Train id = {self.id} || Starts from {self.source.name} || destination {self.destination.name}'
 
 class Car(models.Model):
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
