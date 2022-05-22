@@ -4,6 +4,9 @@ from main.models import Station, Passenger, Admin, Train, Car, Seat
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from hashlib import sha256
+import zoneinfo
+from django.utils.dateparse import parse_datetime
+
 
 class HomePage(TemplateContextView):
     
@@ -266,24 +269,67 @@ def add_train(request):
         f_berth = request.POST.get('f_berth')
         f_seat = request.POST.get('f_seat')
         s_chair = request.POST.get('s_chair')
-        shovan = request.POST.get('shovan_fare')
+        shovan = request.POST.get('shovan')
         f_berth_fare = request.POST.get('f_berth_fare')
         f_seat_fare = request.POST.get('f_seat_fare')
         s_chair_fare = request.POST.get('s_chair_fare')
         shovan_fare = request.POST.get('shovan_fare')
-        dept_time = request.POST.get('dept_time')
+        dept_time = request.POST.get('dept_date')
 
         #adding train
         source_station=Station.objects.filter(id=fr)[0]
         des_station=Station.objects.filter(id=to)[0]
-        print(source_station)
-        print(des_station)
-        print(dept_time)
-        print(f'dept is type {type(dept_time)}')
+        dept_time= dept_time.replace('T',' ')
+        dept_time= parse_datetime(dept_time)
+        dept_time=dept_time.replace(tzinfo=zoneinfo.ZoneInfo('Asia/Dhaka'))
+        # print(dept_time)
+        # print(f'dept_time is type {type(dept_time)}')
+        opening_date=dept_time-timedelta(days=7)
+        # print(opening_date)
+        # print(f'opening_date is type {type(opening_date)}')
+        new_train = Train.objects.create(
+            source=source_station,destination=des_station,departure=dept_time,tickets_available_from=opening_date
+        )
 
-        # new_train = Train.objects.create(
-        #     source=source_station,destination=des_station
-        # )
+        #adding car and seats
+        for i in range(int(f_berth)):
+            new_car=Car.objects.create(
+                train=new_train,car_type='f_berth',fare=int(f_berth_fare),number_of_seats=int(f_berthNOS)
+            )
+            for j in range(int(f_berthNOS)):
+                new_seat=Seat.objects.create(
+                    car=new_car
+                )
+
+        for i in range(int(f_seat)):
+            new_car=Car.objects.create(
+                train=new_train,car_type='f_seat',fare=int(f_seat_fare),number_of_seats=int(f_seatNOS)
+            )
+            for j in range(int(f_seatNOS)):
+                new_seat=Seat.objects.create(
+                    car=new_car
+                )
+
+        for i in range(int(s_chair)):
+            new_car=Car.objects.create(
+                train=new_train,car_type='s_chair',fare=int(s_chair_fare),number_of_seats=int(s_chairNOS)
+            )
+            for j in range(int(s_chairNOS)):
+                new_seat=Seat.objects.create(
+                    car=new_car
+                )
+
+        for i in range(int(shovan)):
+            new_car=Car.objects.create(
+                train=new_train,car_type='shovan',fare=int(shovan_fare),number_of_seats=int(shovanNOS)
+            )
+            for j in range(int(shovanNOS)):
+                new_seat=Seat.objects.create(
+                    car=new_car
+                )
+
+
+
     return redirect('main:add_train_page')
 
 
