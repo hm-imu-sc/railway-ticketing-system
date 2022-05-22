@@ -1,0 +1,39 @@
+<table border="0" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr>
+            <th>From <i class="far fa-long-arrow-right"></i> To</th>
+            <th>Time</th>
+            <th>Fare range</th>
+            <th>Seat Status</th>
+            {% if session.user.login_status %}
+                <th>View seats</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for train in train_schedules %}
+            <tr>
+                <td>
+                    <span>{{ train.source }}</span>
+                    <i class="far fa-long-arrow-right"></i>
+                    <span>{{ train.destination }}</span>
+                </td>
+                <td>{{ train.time }}</td>
+                <td><span class="fare_from">{{ train.fare_range.min }}</span> BDT - <span class="fare_from">{{ train.fare_range.max }}</span> BDT</td>
+                <td>
+                    <div class="seat_status {{ train.seat_status }}">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </td>
+                {% if session.user.login_status %}
+                    <td>
+                        <a href="#"><i class="fas fa-eye"></i></a>
+                    </td>
+                {% endif %}
+            </tr>        
+        {% endfor %}
+    </tbody>
+</table>    

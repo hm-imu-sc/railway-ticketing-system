@@ -1,13 +1,117 @@
 
 from my_modules.base_views import TemplateContextView, NoTemplateView
-from main.models import Station, Passenger, Admin
+from main.models import Station, Passenger, Admin, Train
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from hashlib import sha256
 
 class HomePage(TemplateContextView):
+    
+    def get_context(self, request, *args, **kwargs):
+        stations = list(Station.objects.all())
+
+        day_seq = {}
+        days = ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu']
+
+        for i in range(7):
+            day_seq[days[i]] = i
+
+        today_x = datetime.now()
+        x = datetime.now()
+        today = int(x.day)
+
+        weekend = today - day_seq[x.strftime("%a")]
+
+        x -= timedelta(days=day_seq[x.strftime("%a")])
+
+        return {
+            'stations': [station.location for station in stations],
+            'week_0': [
+                {
+                    'day': day, 
+                    'date': weekend+day_seq[day],
+                    'full_date': f"{(x+timedelta(days=day_seq[day])).day}-{(x+timedelta(days=day_seq[day])).month}-{(x+timedelta(days=day_seq[day])).year}",
+                    'backdate': (x+timedelta(days=day_seq[day])) < today_x,
+                }
+                for day in day_seq.keys()
+            ],
+            'week_1': [
+                {
+                    'day': day, 
+                    'date': (x+timedelta(days=7+day_seq[day])).day,
+                    'full_date': f"{(x+timedelta(days=7+day_seq[day])).day}-{(x+timedelta(days==7+day_seq[day])).month}-{(x+timedelta(days==7+day_seq[day])).year}",
+                    'backdate': (x+timedelta(days=7+day_seq[day])) < today_x,
+                }
+                for day in day_seq.keys()
+            ],
+            'week_2': [
+                {
+                    'day': day, 
+                    'date': (x+timedelta(days=14+day_seq[day])).day,
+                    'full_date': f"{(x+timedelta(days=14+day_seq[day])).day}-{(x+timedelta(days=14+day_seq[day])).month}-{(x+timedelta(days=14+day_seq[day])).year}",
+                    'backdate': (x+timedelta(days=14+day_seq[day])) < today_x,
+                }
+                for day in day_seq.keys()
+            ],
+            'today': today,
+        }
+
     def get_template(self):
         return 'home_page.html'
+
+
+class GetSchedule(TemplateContextView):
+
+    def get_context(self, request, *args, **kwargs):
+        date = kwargs['date']
+        source = kwargs['source']
+        destination = kwargs['destination']
+
+        train_schedules = []
+
+        for train in Train.objects.all():
+
+            if f'{train.departure.day}-{train.departure.month}-{train.departure.year}' == date and train.source.location == source and train.destination.location == destination:
+                seats = 0
+                booked = 0
+
+                for car in train.car_set.all():
+                    seats += car.number_of_seats
+                    for seat in car.seat_set.all():
+                        booked += seat.is_sold
+            
+                booked_percent = 0 if booked == 0 else int(seats/booked)*100
+                booked_class = ''
+
+                if seat == booked:
+                    booked_class = 'status_100'
+                elif booked_percent >= 75:
+                    booked_class = 'status_75'
+                elif booked_percent >= 50:
+                    booked_class = 'status_50'
+                elif booked_percent >= 25:
+                    booked_class = 'status_25'
+                else:
+                    booked_class = 'status_0'
+
+                train_schedules.append({
+                    'train_id': train.id,
+                    'source': source,
+                    'destination': destination,
+                    'time': train.departure.strftime("%I:%M %p"),
+                    'fare_range': {
+                        'max': train.car_set.all().order_by('-fare')[0].fare,
+                        'min': train.car_set.all().order_by('fare')[0].fare,
+                    },
+                    'seat_status': booked_class,
+                })
+
+        return {
+            'train_schedules': train_schedules
+        }
+
+    def get_template(self):
+        return 'train_schedules.html'
 
 
 class PassengerRegistrationPage(TemplateContextView):

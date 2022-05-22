@@ -10,5 +10,6 @@ urlpatterns = [
     path("login_page", views.LoginPage.as_view(logout_required=True), name="login_page"),
     path("login", views.Login.as_view(logout_required=True), name="login"),
     path("logout", views.Logout.as_view(), name="logout"),
+    path("get_schedule/<str:date>/<str:source>/<str:destination>", views.GetSchedule.as_view(), name="get_schedule"),
     path("add_station", views.addStation, name="add_station"),
 ]

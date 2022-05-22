@@ -21,13 +21,13 @@ class View:
             request.session['user'] = user
 
         if (self.login_required and user['login_status']) or (self.logout_required and not user['login_status']):
-            return self._get_requested_response(request, args, kwargs)
+            return self._get_requested_response(request, *args, **kwargs)
         elif self.login_required:
             return redirect('main:login_page')
         elif self.logout_required:
             return redirect('main:home_page')
         else:
-            return self._get_requested_response(request, args, kwargs)
+            return self._get_requested_response(request, *args, **kwargs)
 
     def _get_requested_response(self, request, *args, **kwargs):
         pass
@@ -48,7 +48,7 @@ class TemplateContextView(View):
 
     def _get_requested_response(self, request, *args, **kwargs):
         return render(request, template_name=self.get_template(), context= {
-            **self.get_context(request, args, kwargs),
+            **self.get_context(request, *args, **kwargs),
             'session': dict(request.session)
         })
 
@@ -61,5 +61,5 @@ class NoTemplateView(View):
         pass
 
     def _get_requested_response(self, request, *args, **kwargs):
-        self.act(request, args, kwargs)
+        self.act(request, *args, **kwargs)
         return redirect(self.get_redirection())
