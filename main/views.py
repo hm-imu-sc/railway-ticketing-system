@@ -236,7 +236,7 @@ class Login(NoTemplateView):
                     'username': username,
                     'domain': domain
                 }
-                request.session.set_expire(timedelta(days=1))
+                # request.session.set_expire(timedelta(days=1))
 
                 if domain == 'admin':
                     self.redirect_to = 'main:admin_home_page'
