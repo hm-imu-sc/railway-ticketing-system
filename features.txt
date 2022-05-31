@@ -1,0 +1,7 @@
+1. Passenger Registration
+2. Login (Passenger and Admin)
+3. Admin Controls
+    a. Add new train
+    b. Add new station
+4. Ticket search
+5. Seat Selection and Payment
