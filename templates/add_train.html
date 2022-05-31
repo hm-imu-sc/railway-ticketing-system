@@ -9,13 +9,15 @@
         {% csrf_token %}
         <select name="from" required>
             {% for station in stations %}
-                <option value="{{ station.id }}">{{ station.name }}</option>
+                <option value="{{ station.id }}">{{ station.location }}</option>
             {% endfor %}
         </select>
+
         <label>&nbsp; To &nbsp;</label>
+
         <select name="to" required>
             {% for station in stations %}
-                <option value="{{ station.id }}">{{ station.name }}</option>
+                <option value="{{ station.id }}">{{ station.location }}</option>
             {% endfor %}
         </select><br><br>
 

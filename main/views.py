@@ -1,11 +1,12 @@
 
-from my_modules.base_views import TemplateContextView, NoTemplateView
+from my_modules.base_views import APIOnlyView, TemplateContextView, NoTemplateView, ActionOnlyView
 from main.models import Station, Passenger, Admin, Train, Car, Seat
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from hashlib import sha256
 import zoneinfo
 from django.utils.dateparse import parse_datetime
+import json
 
 
 class HomePage(TemplateContextView):
@@ -57,10 +58,25 @@ class HomePage(TemplateContextView):
                 for day in day_seq.keys()
             ],
             'today': today,
+            'nav': {
+                'home_page': 'active'
+            }
         }
 
     def get_template(self):
         return 'home_page.html'
+
+
+class AdminHomePage(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        return {
+            'nav': {
+                'admin_home_page': 'active'
+            }
+        }
+
+    def get_template(self):
+        return 'admin_home_page.html'
 
 
 class SeatSelectionPage(TemplateContextView):
@@ -220,7 +236,13 @@ class Login(NoTemplateView):
                     'username': username,
                     'domain': domain
                 }
-                self.redirect_to = 'main:home_page'
+                request.session.set_expire(timedelta(days=1))
+
+                if domain == 'admin':
+                    self.redirect_to = 'main:admin_home_page'
+                else:
+                    self.redirect_to = 'main:home_page'
+                
                 request.session['login_error'] = ''
             else:
                 self.redirect_to = 'main:login_page'
@@ -261,17 +283,31 @@ class AddStationPage(TemplateContextView):
     def get_template(self):
         return 'add_station.html'
 
-class AddStation(NoTemplateView):
+
+class AddStation(ActionOnlyView):
     def act(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            st_name=request.POST.get('station_name')
-            st_location=request.POST.get('station_location')
-            st_description=request.POST.get('station_description')
-            station = Station.objects.create(
-                name=st_name,location=st_location,description=st_description
+
+        st_name = kwargs['name']
+        st_location = kwargs['location']
+        st_description = kwargs['desc']
+
+        try:
+            Station.objects.create(
+                name=st_name,
+                location=st_location,
+                description=st_description
             )
-    def get_redirection(self):
-        return 'main:add_station_page'
+            return json.dumps({
+                'status': True,
+                'message': 'Station added successfully !!!'
+            })
+
+        except:
+            return json.dumps({
+                'status': True,
+                'message': 'Couldn\'t add station !!!'
+            })
+
 
 class AddTrainPage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
@@ -282,9 +318,10 @@ class AddTrainPage(TemplateContextView):
     def get_template(self):
         return 'add_train.html'
 
+
 class AddTrain(NoTemplateView):
     def act(self, request, *args, **kwargs):
-        print('in add_train')
+        # print('in add_train')
         f_berthNOS = 6 * 4
         f_seatNOS = 14 * 4
         s_chairNOS = 14 * 4
@@ -353,6 +390,7 @@ class AddTrain(NoTemplateView):
                     new_seat = Seat.objects.create(
                         car=new_car
                     )
+
     def get_redirection(self):
         return 'main:add_train_page'
 

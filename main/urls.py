@@ -5,10 +5,11 @@ app_name = "main"
 
 urlpatterns = [
     path("", views.HomePage.as_view(), name="home_page"),
-    path("add_station_page", views.AddStationPage.as_view(), name="add_station_page"),
-    path("add_station", views.AddStation.as_view(), name="add_station"),
-    path("add_train_page",views.AddTrainPage.as_view(), name = "add_train_page"),
-    path("add_train",views.AddTrain.as_view(), name = "add_train"),
+    path("admin_home_page/", views.AdminHomePage.as_view(login_required=True, admin_required=True), name="admin_home_page"),
+    path("add_station_page", views.AddStationPage.as_view(login_required=True, admin_required=True), name="add_station_page"),
+    path("add_station/<str:name>/<str:location>/<str:desc>", views.AddStation.as_view(login_required=True, admin_required=True), name="add_station"),
+    path("add_train_page",views.AddTrainPage.as_view(login_required=True, admin_required=True), name = "add_train_page"),
+    path("add_train",views.AddTrain.as_view(login_required=True, admin_required=True), name = "add_train"),
     path("passenger_registration_page", views.PassengerRegistrationPage.as_view(), name="passenger_registration_page"),
     path("passenger_registration", views.PassengerRegistration.as_view(), name="passenger_registration"),
     path("login_page", views.LoginPage.as_view(logout_required=True), name="login_page"),

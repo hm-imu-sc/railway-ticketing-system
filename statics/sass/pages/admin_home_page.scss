@@ -1,0 +1,140 @@
+@import "../utils/_variables";
+@import "../layouts/_navbar";
+@import "../utils/_scroll";
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 7%;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
+    padding: 20px;
+    width: 620px;
+    margin: 7% auto 0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.445);
+    text-align: center;
+
+    i {
+        background: transparent;
+        margin: 20px auto;
+        text-align: center;
+        cursor: pointer;
+        border: 3px solid black;
+        padding: 5px 10px;
+        border-radius: 10px;
+
+        &:hover {
+            color: rgb(233, 239, 192);
+            background-color: black;
+        }
+    }
+
+    .modal_content {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        margin: auto;
+        max-height: 800px;
+        height: auto;
+        width: 500px;
+        border: 2px solid $color_default;
+        border-radius: 10px;
+        overflow: auto;
+
+        .add_station {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+
+            h2 {
+                margin-top: 20px;
+                color: $color_default;
+            }    
+
+            .form_control_block {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                margin: 10px;
+                
+                .form_control {
+                    display: flex;
+                    flex-direction: column;
+                    margin: 10px 0;
+
+                    label {
+                        margin-left: 5px;
+                        margin-bottom: 3px;
+                        font-size: 20px;
+                        color: $color_default;
+                        text-align: left;
+                    }
+                    
+                    input, textarea {
+                        border: 2px solid $color_default;
+                        border-radius: 10px;
+                        padding: 20px;      
+                        color: $color_default;
+                    }
+
+                    textarea {
+                        resize: vertical;
+                    }
+                }
+            }
+        
+            button[type="submit"], inputbutton[type="submit"] {
+                border: 2px solid $color_default;
+                border-radius: 10px;
+                padding: 10px 15px;
+                font-size: 20px;
+                width: 300px;
+                color: $color_default;
+                margin: 20px auto;
+                cursor: pointer;
+
+                &:hover {
+                    color: rgb(233, 239, 192);
+                    background-color: $color_default;
+                }
+            }
+        }
+    }
+}
+
+.admin_controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    padding: 20px;
+
+    a {
+        color: $color_default;
+        border: 2px solid $color_default;
+        border-radius: 10px;
+        padding: 10px 40px;
+        margin: 10px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            color: rgb(233, 239, 192);
+            background-color: $color_default;
+        }
+    }
+}

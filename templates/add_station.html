@@ -1,19 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Station</title>
-</head>
-<body>
-<form method="post" action="{% url 'main:add_station' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="station_name">Station Name</label><br>
-    <input type="text" id="station_name" name="station_name" required><br><br>
-    <label for="station_location">Station Location</label><br>
-    <input type="text" id="station_location" name="station_location" required><br><br>
-    <label for="station_description">Station Description</label><br>
-    <input type="text" id="station_description" name="station_description"><br><br>
-    <input type="submit" value="Add">
-</form>
-</body>
-</html>
+<div class="add_station">
+
+    <h2>Add new station</h2>
+
+    <div class="form_control_block">
+        <div class="form_control">
+            <label for="station_name">Name:</label>
+            <input type="text" id="station_name" name="station_name" required>
+        </div>
+
+        <div class="form_control">
+            <label for="station_location">Location:</label>
+            <input type="text" id="station_location" name="station_location" required>
+        </div>
+        <div class="form_control">
+            <label for="station_description">Description:</label>
+            <textarea name="station_description" id="station_description" cols="30" rows="3"></textarea>
+        </div>        
+    </div>
+
+    <button class="submit_add_station" type="submit">
+        Add
+    </button>
+</div>
+
+<div class="message_box">
+
+</div>

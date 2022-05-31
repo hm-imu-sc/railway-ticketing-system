@@ -1,18 +1,27 @@
 <div class="navbar">
     <div class="nav-item-primary">
         <a class="brand" href="{% url 'main:home_page' %}">Rail Trip</a>
-        <a class="nav-item" href="{% url 'main:home_page' %}">Home</a>
-        <a class="nav-item" href="#">Rail News</a>
-        <a class="nav-item" href="{% url 'main:home_page' %}">Tickets</a>
+
+        {% if session.user.login_status and session.user.domain == 'admin' %}
+            <a href="{% url 'main:admin_home_page' %}" class="nav-item {{ nav.admin_home_page }}">Admin Controls</a>
+        {% else %}
+            <a class="nav-item {{ nav.home_page }}" href="{% url 'main:home_page' %}">Home</a>
+            <a class="nav-item {{ nav.news_page }}" href="#">Rail News</a>
+            <a class="nav-item {{ nav.tickets_page }}" href="{% url 'main:home_page' %}">Tickets</a>
+        {% endif %}
+
     </div>
     <div class="nav-item-secondary">
         {% if session.user.login_status %}
-            <a class="nav-item" href="#">My Trips</a>
-            <a class="nav-item active" href="#">Profile</a>
+            {% if session.user.domain == 'passenger' %}
+                <a class="nav-item {{ nav.trips_page }}" href="#">My Trips</a>
+            {% endif %}
+
+            <a class="nav-item {{ nav.profile_page }}" href="#">Profile</a>
             <a class="nav-item" href="{% url 'main:logout' %}">Logout</a>
         {% else %}
-            <a class="nav-item" href="{% url 'main:passenger_registration_page' %}">Register</a>
-            <a class="nav-item" href="{% url 'main:login_page' %}">Login</a>
+            <a class="nav-item {{ nav.registration_page }}" href="{% url 'main:passenger_registration_page' %}">Register</a>
+            <a class="nav-item {{ nav.login_page }}" href="{% url 'main:login_page' %}">Login</a>
         {% endif %}
     </div>
 </div>

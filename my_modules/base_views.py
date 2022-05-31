@@ -4,10 +4,13 @@ import django
 django.setup()
 
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+import json
 
 # Create your views here.
 
 class View:
+    admin_required = False
     login_required = False
     logout_required = False
 
@@ -21,6 +24,8 @@ class View:
             request.session['user'] = user
 
         if (self.login_required and user['login_status']) or (self.logout_required and not user['login_status']):
+            if self.admin_required and user['domain'] != 'admin':
+                return redirect('main:home_page')
             return self._get_requested_response(request, *args, **kwargs)
         elif self.login_required:
             return redirect('main:login_page')
@@ -33,7 +38,8 @@ class View:
         pass
 
     @classmethod
-    def as_view(cls, login_required=False, logout_required=False):
+    def as_view(cls, login_required=False, logout_required=False, admin_required=False):
+        cls.admin_required = admin_required
         cls.login_required = login_required
         cls.logout_required = logout_required
         return cls().respond
@@ -63,3 +69,24 @@ class NoTemplateView(View):
     def _get_requested_response(self, request, *args, **kwargs):
         self.act(request, *args, **kwargs)
         return redirect(self.get_redirection())
+
+class ActionOnlyView(View):
+
+    def act(self, request, *args, **kwargs):
+        pass
+
+    def _get_requested_response(self, request, *args, **kwargs):
+        ret = self.act(request, *args, **kwargs)
+
+        if ret is None:
+            return HttpResponse('')
+
+        return HttpResponse(ret)
+
+class APIOnlyView(View):
+    
+    def get_return(self, request, *args, **kwargs):
+        pass
+
+    def _get_requested_response(self, request, *args, **kwargs):
+        return HttpResponse(json.dumps(self.get_return(request, *args, **kwargs)))
