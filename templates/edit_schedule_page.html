@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit schedule</title>
+</head>
+<body>
+    <label>Station: </label>
+    <select name="source" required>
+        {% for station in stations %}
+            <option value="{{ station.id }}">{{ station.location }}</option>
+        {% endfor %}
+    </select>
+    <label for="time">Date</label>
+        <input type="datetime-local" id="time" name="time" required>
+    <button id="get_schedule">Get Schedule</button>
+
+</body>
+</html>

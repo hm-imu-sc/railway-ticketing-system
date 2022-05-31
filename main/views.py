@@ -394,6 +394,12 @@ class AddTrain(NoTemplateView):
     def get_redirection(self):
         return 'main:add_train_page'
 
-
+class EditSchedule(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        context = {}
+        context['stations'] = Station.objects.all()
+        return context
+    def get_template(self):
+        return 'edit_schedule_page.html'
 
 
