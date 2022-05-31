@@ -338,9 +338,9 @@ class AddTrain(ActionOnlyView):
         # return "checking"
 
         f_berthNOS = 6 * 4
-        f_seatNOS = 14 * 4
-        s_chairNOS = 14 * 4
-        shovanNOS = 16 * 4
+        f_seatNOS = 10 * 4
+        s_chairNOS = 10 * 4
+        shovanNOS = 14 * 4
         
         if request.method == 'GET':
             fr = request.GET.get('from')
