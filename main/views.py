@@ -7,6 +7,7 @@ from hashlib import sha256
 import zoneinfo
 from django.utils.dateparse import parse_datetime
 import json
+from django.http import HttpResponse
 
 
 class HomePage(TemplateContextView):
@@ -401,5 +402,40 @@ class EditSchedule(TemplateContextView):
         return context
     def get_template(self):
         return 'edit_schedule_page.html'
+
+class GetScheduleByDate(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        context = {}
+        date = kwargs['date']
+        source = kwargs['source']
+        # print(f"getting schedule for source: {source} and date: {date}")
+        year = date.split('-')[0]
+        month = date.split('-')[1]
+        day = date.split('-')[2]
+        # print(f"{year} {month} {day}")
+        trains = Train.objects.filter(departure__year=year,departure__month=month,departure__day=day)
+        data=[]
+        for train in trains:
+            temp={}
+            temp['id']=train.id
+            temp['source']=train.source.id
+            temp['destination'] = train.destination.id
+            temp['departure_day'] = train.departure.day
+            temp['departure_month'] = train.departure.month
+            temp['departure_year'] = train.departure.year
+            temp['departure_hour'] = train.departure.hour
+            temp['departure_min'] = train.departure.minute
+            temp['departure_sec'] = train.departure.second
+            data.append(temp)
+
+        if len(data)==0:
+            context['status'] = "NOT FOUND"
+        else:
+            context['status'] = "OK"
+
+        context['data']=data;
+
+        return json.dumps(context)
+
 
 

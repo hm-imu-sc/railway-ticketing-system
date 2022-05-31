@@ -18,6 +18,7 @@ urlpatterns = [
     path("get_schedule/<str:date>/<str:source>/<str:destination>", views.GetSchedule.as_view(), name="get_schedule"),
     path("seat_selection_page/<str:train_id>", views.SeatSelectionPage.as_view(login_required=True), name="seat_selection_page"),
     path("edit_schedule_page",views.EditSchedule.as_view(),name="edit_schedule_page"),
+    path("get_schedule_by_date/<str:source>/<str:date>",views.GetScheduleByDate.as_view(),name="get_schedule_by_date"),
 ]
 
 
