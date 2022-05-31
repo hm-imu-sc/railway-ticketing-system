@@ -6,7 +6,6 @@ $("#add_station").click(function(e) {
         "url": $(this).attr('href'),
         "type": "GET",
         "success": function(data) {
-            // alert(data);
             $('.modal_content').html(data);
 
             $(".submit_add_station").click(function() {
@@ -37,6 +36,40 @@ $("#add_station").click(function(e) {
         }
     });
 });
+
+$("#add_train").click(function(e) {
+    e.preventDefault();
+    $(".modal").css('display', 'block');
+
+    $.ajax({
+        "url": $(this).attr('href'),
+        "type": "GET",
+        "success": function(data) {
+            $('.modal_content').html(data);
+
+            $(".add_train").submit(function(e){
+                e.preventDefault();
+
+                $.ajax({
+                    "url": $(this).attr('action'),
+                    "type": "GET",
+                    "data": $(this).serialize(),
+                    "success": function(data) {
+
+                        try {
+                            data = JSON.parse(data);
+                            $(".message_box").html(data['message']);
+                            $('.modal_content').scrollTop($('.modal_content').height());
+                        }
+                        catch (err) {
+                            console.log("invalid log !!!")
+                        }
+                    }
+                });
+            });
+        }
+    })
+})
 
 $(".modal").click(function(e) {
     if (e.target == $(this)[0]) {

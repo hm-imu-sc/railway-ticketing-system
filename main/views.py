@@ -319,50 +319,53 @@ class AddStation(ActionOnlyView):
 
 class AddTrainPage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
-        print('in add_train_page')
-        context = {}
-        context['stations'] = Station.objects.all()
-        return context
+        return {
+            'stations': Station.objects.all(),
+            'current_datetime': datetime.today().strftime("%Y-%m-%dT%H:%M")
+        }
+
     def get_template(self):
         return 'add_train.html'
 
 
-class AddTrain(NoTemplateView):
+class AddTrain(ActionOnlyView):
     def act(self, request, *args, **kwargs):
-        # print('in add_train')
+
+        # print("OKAY !!!")
+
+        # print(request.GET)
+
+        # return "checking"
+
         f_berthNOS = 6 * 4
         f_seatNOS = 14 * 4
         s_chairNOS = 14 * 4
         shovanNOS = 16 * 4
-        if request.method == 'POST':
-            fr = request.POST.get('from')
-            to = request.POST.get('to')
-            f_berth = request.POST.get('f_berth')
-            f_seat = request.POST.get('f_seat')
-            s_chair = request.POST.get('s_chair')
-            shovan = request.POST.get('shovan')
-            f_berth_fare = request.POST.get('f_berth_fare')
-            f_seat_fare = request.POST.get('f_seat_fare')
-            s_chair_fare = request.POST.get('s_chair_fare')
-            shovan_fare = request.POST.get('shovan_fare')
-            dept_time = request.POST.get('dept_date')
+        
+        if request.method == 'GET':
+            fr = request.GET.get('from')
+            to = request.GET.get('to')
+            f_berth = request.GET.get('f_berth')
+            f_seat = request.GET.get('f_seat')
+            s_chair = request.GET.get('s_chair')
+            shovan = request.GET.get('shovan')
+            f_berth_fare = request.GET.get('f_berth_fare')
+            f_seat_fare = request.GET.get('f_seat_fare')
+            s_chair_fare = request.GET.get('s_chair_fare')
+            shovan_fare = request.GET.get('shovan_fare')
+            dept_time = request.GET.get('dept_date')
 
-            # adding train
             source_station = Station.objects.filter(id=fr)[0]
             des_station = Station.objects.filter(id=to)[0]
             dept_time = dept_time.replace('T', ' ')
             dept_time = parse_datetime(dept_time)
             dept_time = dept_time.replace(tzinfo=zoneinfo.ZoneInfo('Asia/Dhaka'))
-            # print(dept_time)
-            # print(f'dept_time is type {type(dept_time)}')
             opening_date = dept_time - timedelta(days=7)
-            # print(opening_date)
-            # print(f'opening_date is type {type(opening_date)}')
+
             new_train = Train.objects.create(
                 source=source_station, destination=des_station, departure=dept_time, tickets_available_from=opening_date
             )
 
-            # adding car and seats
             for i in range(int(f_berth)):
                 new_car = Car.objects.create(
                     train=new_train, car_type='f_berth', fare=int(f_berth_fare), number_of_seats=int(f_berthNOS)
@@ -398,10 +401,14 @@ class AddTrain(NoTemplateView):
                     new_seat = Seat.objects.create(
                         car=new_car
                     )
-
-    def get_redirection(self):
-        return 'main:add_train_page'
-
-
-
+    
+            return json.dumps({
+                "status": True,
+                "message": "Train added successfully !!!"
+            })
+        else:
+            return json.dumps({
+                "status": False,
+                "message": "Error adding train !!!"
+            })
 
