@@ -167,6 +167,14 @@ class GetSchedule(TemplateContextView):
 
 
 class PassengerRegistrationPage(TemplateContextView):
+    
+    def get_context(self, request, *args, **kwargs):
+        return {
+            'nav': {
+                'registration_page': 'active'
+            }
+        }
+
     def get_template(self):
         return 'passenger_registration_page.html'
 
@@ -304,7 +312,7 @@ class AddStation(ActionOnlyView):
 
         except:
             return json.dumps({
-                'status': True,
+                'status': False,
                 'message': 'Couldn\'t add station !!!'
             })
 

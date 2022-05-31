@@ -1,10 +1,6 @@
 $("#add_station").click(function(e) {
-    e.preventDefault()
+    e.preventDefault();
     $(".modal").css('display', 'block');
-
-    // console.log($(this).attr('href'));
-
-    // return;
 
     $.ajax({
         "url": $(this).attr('href'),
@@ -14,13 +10,10 @@ $("#add_station").click(function(e) {
             $('.modal_content').html(data);
 
             $(".submit_add_station").click(function() {
-                e.preventDefault()
             
                 let name = $("#station_name").val();
                 let location = $("#station_location").val();
                 let desc = $("#station_description").val();
-            
-                // alert(name+location+desc);
             
                 $.ajax({
                     "url": '/add_station/'+name+'/'+location+'/'+desc,
