@@ -47,7 +47,8 @@ function get_schedule_form() {
                     "data": $(this).serialize(),
                     "success": function(data) {
                         $("#schedule_add_day").before(data);
-                        $(".day_schedule_delete").click(enable_delete);
+                        let id = $($(data).find(".day_schedule_delete")[0]).attr('delete');
+                        $(`.day_schedule_delete[delete='${id}']`).click(enable_delete);
                     }
                 });
             })            

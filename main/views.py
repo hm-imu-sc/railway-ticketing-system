@@ -508,16 +508,17 @@ class DeleteDaySchedule(ActionOnlyView):
         
         station_id = Admin.objects.get(username=request.session['user']['username']).station.id
 
+        print(f'PATH: json/default_day_schedule_{station_id}.json')
+
         file = open(f'json/default_day_schedule_{station_id}.json', 'r')
         all_schedules = json.load(file)
         file.close()
 
-        file = open(f'json/default_day_schedule_{station_id}.json', 'w')
-        
         for i in range(len(all_schedules)):
             if all_schedules[i]['id'] == to_delete:
                 all_schedules.remove(all_schedules[i])        
 
+                file = open(f'json/default_day_schedule_{station_id}.json', 'w')
                 json.dump(all_schedules, file)
                 file.close()
 
