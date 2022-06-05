@@ -5,14 +5,7 @@ django.setup()
 
 import datetime
 
-class Test1:
-    @classmethod
-    def as_view(cls):
-        return cls().respond
+def x(a, b):
+    print(a+b)
 
-
-class Test2(Test1):
-
-    def respond(self, x, y):
-        print(f"x+y={x+y}")
-
+x(*[int(v) for v in "10:1".split(":")])

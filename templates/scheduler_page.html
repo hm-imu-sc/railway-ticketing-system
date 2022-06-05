@@ -18,7 +18,7 @@
             <button id="day_schedule">
                 Default Day Schedule
             </button>    
-            <button class="active" id="week_schedule">
+            <button id="week_schedule" href="{% url 'main:week_schedule_controls' %}">
                 Default Week Schedule
             </button>        
             <button id="specific_schedule">
@@ -26,76 +26,11 @@
             </button>
         </div>
 
-        <div class="manager_body">
-            {% comment %} <div class="schedule">
-                <div class="head">
-                    <div>Dhaka<i class="far fa-long-arrow-right"></i>Khulna</div>
-                    <div><i class="far fa-clock"></i><span>03:30 PM</span></div>
-                </div>
-                <div class="body">
-                    <div class="car">
-                        <div>
-                            First Class Birth
-                        </div>
-                        <hr class="vertical">
-                        <div>
-                            <span>2</span>
-                            <hr>
-                            <span>20</span>
-                        </div>
-                        <div class="fare">
-                            <i class="fad fa-coins"></i><span>1500</span>
-                        </div>
-                    </div>
-                    <div class="car">
-                        <div>
-                            First Class Seat
-                        </div>
-                        <hr class="vertical">
-                        <div>
-                            <span>2</span>
-                            <hr>
-                            <span>20</span>
-                        </div>
-                        <div class="fare">
-                            <i class="fad fa-coins"></i><span>1500</span>
-                        </div>
-                    </div>
-                    <div class="car">
-                        <div>
-                            Shovan Chair
-                        </div>
-                        <hr class="vertical">
-                        <div>
-                            <span>2</span>
-                            <hr>
-                            <span>20</span>
-                        </div>
-                        <div class="fare">
-                            <i class="fad fa-coins"></i><span>1500</span>
-                        </div>
-                    </div>
-                    <div class="car">
-                        <div>
-                            Shovan
-                        </div>
-                        <hr class="vertical">
-                        <div>
-                            <span>2</span>
-                            <hr>
-                            <span>20</span>
-                        </div>
-                        <div class="fare">
-                            <i class="fad fa-coins"></i><span>1500</span>
-                        </div>
-                    </div>
+        <div class="manager_body" href="#">
 
-                </div>
-            </div>   {% endcomment %}
-            
-            <button disabled hidden class="schedule_add" id="schedule_add_day">
-                <i class="fas fa-plus"></i>
-            </button>
+            <div class="day_schedules">
+
+            </div>
         </div>
 
         <div class="modal">
