@@ -340,12 +340,17 @@ class AddTrain(NoTemplateView):
             shovan_fare = request.POST.get('shovan_fare')
             dept_time = request.POST.get('dept_date')
 
+
             # adding train
             source_station = Station.objects.filter(id=fr)[0]
             des_station = Station.objects.filter(id=to)[0]
+            # print(dept_time)
             dept_time = dept_time.replace('T', ' ')
-            dept_time = parse_datetime(dept_time)
-            dept_time = dept_time.replace(tzinfo=zoneinfo.ZoneInfo('Asia/Dhaka'))
+            dept_time = dept_time.replace('-', ' ')
+            dept_time = dept_time.replace(':', ' ')
+            time=dept_time.split(" ")
+            # print(time)
+            dept_time = datetime(int(time[0]),int(time[1]),int(time[2]),int(time[3]),int(time[4]))
             # print(dept_time)
             # print(f'dept_time is type {type(dept_time)}')
             opening_date = dept_time - timedelta(days=7)
@@ -395,7 +400,7 @@ class AddTrain(NoTemplateView):
     def get_redirection(self):
         return 'main:add_train_page'
 
-class EditSchedule(TemplateContextView):
+class EditSchedulePage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
         context = {}
         context['stations'] = Station.objects.all()
@@ -403,39 +408,38 @@ class EditSchedule(TemplateContextView):
     def get_template(self):
         return 'edit_schedule_page.html'
 
-class GetScheduleByDate(ActionOnlyView):
-    def act(self, request, *args, **kwargs):
+class GetScheduleByDate(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
         context = {}
         date = kwargs['date']
         source = kwargs['source']
-        # print(f"getting schedule for source: {source} and date: {date}")
+        #print(f"getting schedule for source: {source} and date: {date}")
         year = date.split('-')[0]
         month = date.split('-')[1]
         day = date.split('-')[2]
-        # print(f"{year} {month} {day}")
+        #print(f"{year} {month} {day}")
         trains = Train.objects.filter(departure__year=year,departure__month=month,departure__day=day)
-        data=[]
-        for train in trains:
-            temp={}
-            temp['id']=train.id
-            temp['source']=train.source.id
-            temp['destination'] = train.destination.id
-            temp['departure_day'] = train.departure.day
-            temp['departure_month'] = train.departure.month
-            temp['departure_year'] = train.departure.year
-            temp['departure_hour'] = train.departure.hour
-            temp['departure_min'] = train.departure.minute
-            temp['departure_sec'] = train.departure.second
-            data.append(temp)
+        #print(len(trains))
+        context['trains']=trains;
 
-        if len(data)==0:
-            context['status'] = "NOT FOUND"
-        else:
-            context['status'] = "OK"
+        return context
+    def get_template(self):
+        return 'edit_schedule_table.html'
 
-        context['data']=data;
+class DeleteTrainFromSchedule(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        train_id=kwargs['train_id']
+        Train.objects.get(id=train_id).delete()
 
-        return json.dumps(context)
+class UpdateScheduleTime(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        train_id = kwargs['train_id']
+        times = kwargs['time'].split(":")
+        train=Train.objects.get(id=train_id)
+        train.departure=train.departure.replace(hour=int(times[0]),minute=int(times[1]))
+        train.save()
+
+
 
 
 
