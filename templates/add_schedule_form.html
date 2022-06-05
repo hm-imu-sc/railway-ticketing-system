@@ -1,0 +1,73 @@
+<form class="add_schedule" action="{% url 'main:dey_schedule' %}" method="POST">
+
+    {% csrf_token %}
+
+    <h2>Add schedule</h2>
+
+    <div class="form_control_block">
+
+        <div class="form_control">
+            {% comment %} <label for="source">Source:</label> {% endcomment %}
+            <input id="source" type="text" name="source" value="{{ source }}" hidden>
+        </div>
+
+        <div class="form_control">
+            <label for="to">Destination:</label>
+            <select id="to" name="dest">
+                {% for station in stations %}
+                    <option value="{{ station.id }}">{{ station.location }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form_control">
+            <label for="dept">Departure:</label>
+            <input type="time" id="dept" name="dept" value="{{ current_datetime }}" required>
+        </div>    
+
+        <div class="form_control">
+            <label for="f_berth">Number of first class berth cars:</label>
+            <input type="number" name="fcb" id="f_berth" value="2" min="0" required>
+        </div>
+        <div class="form_control">
+            <label for="f_berth_fare">Fare for first class berth cars:</label>
+            <input type="number" name="fcb_fare" id="f_berth_fare" value="1500" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="f_seat">Number of first class seat cars:</label>
+            <input type="number" name="fcs" id="f_seat" value="3" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="f_seat_fare">Fare for first class seat cars:</label>
+            <input type="number" name="fcs_fare" id="f_seat_fare" value="1200" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="s_chair">Number of shovan chair cars:</label>
+            <input type="number" name="sc" id="s_chair" value="4" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="s_chair_fare">Fare for shovan chair cars:</label>
+            <input type="number" name="sc_fare" id="s_chair_fare" value="750" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="shovan">Number of shovan cars:</label>
+            <input type="number" name="s" id="shovan" value="4" min="0" required>
+        </div>
+
+        <div class="form_control">
+            <label for="shovan_fare">Fare for shovan cars:</label>
+            <input type="number" name="s_fare" id="shovan_fare" value="500" min="0" required>
+        </div>        
+    </div>
+  
+    <input class="submit_add_schedule" type="submit" value="Add">
+</form>
+
+<div class="message_box">
+    
+</div>  

@@ -2,15 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-class Admin(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f'Admin id = {self.id} || {self.username}'
-
 class Passenger(models.Model):
     nid = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
@@ -21,6 +12,7 @@ class Passenger(models.Model):
     def __str__(self):
         return f'Passenger id = {self.id} || {self.username}'
 
+
 class Station(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
@@ -28,6 +20,7 @@ class Station(models.Model):
 
     def __str__(self):
         return f'Station id = {self.id} || {self.name} situated in {self.location}'
+
 
 class Train(models.Model):
     source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="source")
@@ -38,6 +31,7 @@ class Train(models.Model):
     def __str__(self):
         return f'Train id = {self.id} || Starts from {self.source.name} || destination {self.destination.name}'
 
+
 class Car(models.Model):
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
     car_type = models.CharField(max_length=255)
@@ -47,6 +41,7 @@ class Car(models.Model):
     def __str__(self):
         return f'Car id = {self.id} || Part of train with train id {self.train.id}'
 
+
 class Seat(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     watching_by = models.IntegerField(default=0)
@@ -54,3 +49,15 @@ class Seat(models.Model):
     is_sold = models.BooleanField(default=False)
     def __str__(self):
         return f'Seat id = {self.id} || Part of car with car id {self.car.id} which is a part of train with train id {self.car.train.id}'
+
+
+class Admin(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)
+    password = models.CharField(max_length=255)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, null=True)
+    is_super = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Admin id = {self.id} || {self.username}'

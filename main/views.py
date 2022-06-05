@@ -33,7 +33,7 @@ class HomePage(TemplateContextView):
             'week_0': [
                 {
                     'day': day, 
-                    'date': weekend+day_seq[day],
+                    'date': (x+timedelta(days=day_seq[day])).day,
                     'full_date': f"{(x+timedelta(days=day_seq[day])).day}-{(x+timedelta(days=day_seq[day])).month}-{(x+timedelta(days=day_seq[day])).year}",
                     'backdate': (x+timedelta(days=day_seq[day])) < today_x,
                 }
@@ -43,7 +43,7 @@ class HomePage(TemplateContextView):
                 {
                     'day': day, 
                     'date': (x+timedelta(days=7+day_seq[day])).day,
-                    'full_date': f"{(x+timedelta(days=7+day_seq[day])).day}-{(x+timedelta(days==7+day_seq[day])).month}-{(x+timedelta(days==7+day_seq[day])).year}",
+                    'full_date': f"{(x+timedelta(days=7+day_seq[day])).day}-{(x+timedelta(days=7+day_seq[day])).month}-{(x+timedelta(days==7+day_seq[day])).year}",
                     'backdate': (x+timedelta(days=7+day_seq[day])) < today_x,
                 }
                 for day in day_seq.keys()
@@ -122,6 +122,8 @@ class GetSchedule(TemplateContextView):
         train_schedules = []
 
         for train in Train.objects.all():
+
+            # print(f'{train.departure.day}-{train.departure.month}-{train.departure.year} | {date}')
 
             if f'{train.departure.day}-{train.departure.month}-{train.departure.year}' == date and train.source.location == source and train.destination.location == destination:
                 seats = 0
@@ -331,12 +333,6 @@ class AddTrainPage(TemplateContextView):
 class AddTrain(ActionOnlyView):
     def act(self, request, *args, **kwargs):
 
-        # print("OKAY !!!")
-
-        # print(request.GET)
-
-        # return "checking"
-
         f_berthNOS = 6 * 4
         f_seatNOS = 10 * 4
         s_chairNOS = 10 * 4
@@ -355,8 +351,11 @@ class AddTrain(ActionOnlyView):
             shovan_fare = request.GET.get('shovan_fare')
             dept_time = request.GET.get('dept_date')
 
+            print(f'Departure: {dept_time}')
+
             source_station = Station.objects.filter(id=fr)[0]
             des_station = Station.objects.filter(id=to)[0]
+
             dept_time = dept_time.replace('T', ' ')
             dept_time = parse_datetime(dept_time)
             dept_time = dept_time.replace(tzinfo=zoneinfo.ZoneInfo('Asia/Dhaka'))
@@ -412,3 +411,132 @@ class AddTrain(ActionOnlyView):
                 "message": "Error adding train !!!"
             })
 
+
+class SchedulerPage(TemplateContextView):
+
+    def get_context(self, request, *args, **kwargs):
+        return {
+            "railway_name": Admin.objects.get(username=request.session['user']['username']).station.name
+        }
+
+    def get_template(self):
+        return "scheduler_page.html"
+
+
+class DaySchedule(TemplateContextView):
+
+    def get_context(self, request, *args, **kwargs):
+        
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        
+        file = open(f'json/default_day_schedule_{station_id}.json', 'r')
+        day_schedule = json.load(file)
+        file.close()
+
+        next_id = 0
+
+        for schedule in day_schedule:
+            next_id = max(next_id, schedule['id'])
+
+        if request.method == "GET":
+            context = {
+                "schedules": []
+            }
+
+            for schedule in day_schedule:
+
+                schedule['source'] = Station.objects.get(id=int(schedule['source'])).location
+                schedule['destination'] = Station.objects.get(id=int(schedule['destination'])).location
+                context['schedules'].append(schedule)
+
+            return context
+        else:
+
+            schedule = {
+                'id': next_id+1,
+                'source': request.POST.get('source'),
+                'destination': request.POST.get('dest'),
+                'time': request.POST.get('dept'),
+                'cars': [
+                    {
+                        'type': 'First Class Birth',
+                        'number_of_cars': int(request.POST.get('fcb')),
+                        'seats_per_car': 24,
+                        'fare': int(request.POST.get('fcb_fare'))
+                    },
+                    {
+                        'type': 'First Class Seat',
+                        'number_of_cars': int(request.POST.get('fcs')),
+                        'seats_per_car': 40,
+                        'fare': int(request.POST.get('fcs_fare'))
+                    },
+                    {
+                        'type': 'Shovan Chair',
+                        'number_of_cars': int(request.POST.get('sc')),
+                        'seats_per_car': 40,
+                        'fare': int(request.POST.get('sc_fare'))
+                    },
+                    {
+                        'type': 'Shovan',
+                        'number_of_cars': int(request.POST.get('s')),
+                        'seats_per_car': 56,
+                        'fare': int(request.POST.get('s_fare'))
+                    },
+                ]
+            }
+
+            day_schedule.append(schedule)
+
+            file = open(f'json/default_day_schedule_{station_id}.json', 'w')
+            json.dump(day_schedule, file)
+            file.close()
+
+            schedule['source'] = Station.objects.get(id=int(schedule['source'])).location
+            schedule['destination'] = Station.objects.get(id=int(schedule['destination'])).location
+
+            return {
+                "schedules": [schedule]
+            }
+
+    def get_template(self):
+        return "schedule.html"
+
+
+class DeleteDaySchedule(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        to_delete = kwargs['id']
+        
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+
+        file = open(f'json/default_day_schedule_{station_id}.json', 'r')
+        all_schedules = json.load(file)
+        file.close()
+
+        file = open(f'json/default_day_schedule_{station_id}.json', 'w')
+        
+        for i in range(len(all_schedules)):
+            if all_schedules[i]['id'] == to_delete:
+                all_schedules.remove(all_schedules[i])        
+
+                json.dump(all_schedules, file)
+                file.close()
+
+                return json.dumps({
+                    'status': True
+                })
+                
+        return json.dumps({
+            'status': False
+        })
+
+
+class AddScheduleFrom(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        return {
+            'source': Admin.objects.get(username=request.session['user']['username']).station.id,
+            'stations': Station.objects.all(),
+            'current_datetime': datetime.today().strftime("%H:%M")
+        }
+    
+    def get_template(self):
+        return "add_schedule_form.html"

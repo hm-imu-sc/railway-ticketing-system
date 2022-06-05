@@ -17,6 +17,10 @@ urlpatterns = [
     path("logout", views.Logout.as_view(), name="logout"),
     path("get_schedule/<str:date>/<str:source>/<str:destination>", views.GetSchedule.as_view(), name="get_schedule"),
     path("seat_selection_page/<str:train_id>", views.SeatSelectionPage.as_view(login_required=True), name="seat_selection_page"),
+    path("scheduler_page/", views.SchedulerPage.as_view(login_required=True, admin_required=True), name="scheduler_page"),
+    path("day_schedule/", views.DaySchedule.as_view(login_required=True, admin_required=True), name="dey_schedule"),
+    path("add_schedule_form/", views.AddScheduleFrom.as_view(login_required=True, admin_required=True), name="add_schedule_form"),
+    path("delete_day_schedule/<int:id>/", views.DeleteDaySchedule.as_view(login_required=True, admin_required=True), name="delete_day_schedule"),
 ]
 
 
