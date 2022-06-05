@@ -434,7 +434,7 @@ class GetScheduleByDate(TemplateContextView):
         month = date.split('-')[1]
         day = date.split('-')[2]
         #print(f"{year} {month} {day}")
-        trains = Train.objects.filter(departure__year=year,departure__month=month,departure__day=day)
+        trains = Train.objects.filter(departure__year=year,departure__month=month,departure__day=day,source=source)
         #print(len(trains))
         context['trains']=trains;
 
