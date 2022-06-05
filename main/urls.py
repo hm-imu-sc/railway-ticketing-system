@@ -25,10 +25,10 @@ urlpatterns = [
     path("get_schedule_by_date/<str:source>/<str:date>",views.GetScheduleByDate.as_view(login_required=True, admin_required=True),name="get_schedule_by_date"),
     path("delete_train/<int:train_id>",views.DeleteTrainFromSchedule.as_view(login_required=True, admin_required=True),name="delete_train_from_schedule"),
     path("update_train_time/<int:train_id>/<str:time>",views.UpdateScheduleTime.as_view(login_required=True, admin_required=True),name="delete_train_from_schedule"),
+    path("week_schedule_controls/", views.WeekScheduleControls.as_view(login_required=True, admin_required=True), name="week_schedule_controls"),
+    path("revert_week_day/<int:index>/", views.RevertWeekDay.as_view(login_required=True, admin_required=True), name="revert_week_day"),
+    path("get_week_day_schedule/<int:index>/", views.GetWeekDaySchedule.as_view(login_required=True, admin_required=True), name="get_week_day_schedule"),
 ]
-
-
-
 
 
     # path("add_station_page", views.add_station_page, name="add_station_page"),

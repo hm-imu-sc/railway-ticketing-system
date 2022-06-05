@@ -1,0 +1,64 @@
+<div class="week_days">
+    <button disabled class="week_day stars" index="0">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+    </button>
+
+    {% for week_day in week_days %}
+        <button class="week_day {{ week_day.active }}" href="{% url 'main:get_week_day_schedule' index=week_day.index %}" index="{{ week_day.index }}">
+            {{ week_day.day }}
+        </button>
+    {% endfor %}
+    
+    <button disabled class="week_day stars" index="6">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+    </button>
+</div>
+
+<div class="day_schedules">
+    {% for schedule in today_schedule %}
+        <div class="schedule" id="day_schedule_{{ schedule.id }}">
+
+            <button class="day_schedule_delete" delete="{{ schedule.id }}" href="{% url 'main:delete_day_schedule' id=schedule.id %}">
+                <i class="fad fa-trash"></i>
+            </button>
+
+            <div class="head">
+                <div>{{ schedule.source }}<i class="far fa-long-arrow-right"></i>{{ schedule.destination }}</div>
+                <div><i class="far fa-clock"></i><span>{{ schedule.time }}</span></div>
+            </div>
+
+            <div class="body">
+
+                {% for car in schedule.cars %}
+                    <div class="car">
+                        <div>
+                            {{ car.type }}
+                        </div>
+                        <hr class="vertical">
+                        <div>
+                            <span>{{ car.number_of_cars }}</span>
+                            <hr>
+                            <span>{{ car.seats_per_car }}</span>
+                        </div>
+                        <div class="fare">
+                            <i class="fad fa-coins"></i><span>{{ car.fare }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div> 
+    {% endfor %}
+
+    <button class="schedule_add" id="schedule_add_day">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <button class="revert" href="{% url 'main:revert_week_day' index=revert %}" revert="{{ revert }}">
+        <i class="fas fa-undo"></i>
+    </button>
+</div>

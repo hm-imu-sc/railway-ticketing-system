@@ -1,11 +1,12 @@
 
+from my_modules.utils import get_week_schedule_format
 from my_modules.base_views import APIOnlyView, TemplateContextView, NoTemplateView, ActionOnlyView
 from main.models import Station, Passenger, Admin, Train, Car, Seat
+from django.utils.dateparse import parse_datetime
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
 from hashlib import sha256
 import zoneinfo
-from django.utils.dateparse import parse_datetime
 import json
 from django.http import HttpResponse
 
@@ -416,6 +417,7 @@ class AddTrain(ActionOnlyView):
                 "message": "Error adding train !!!"
             })
 
+
 class EditSchedulePage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
         context = {}
@@ -423,6 +425,7 @@ class EditSchedulePage(TemplateContextView):
         return context
     def get_template(self):
         return 'edit_schedule_page.html'
+
 
 class GetScheduleByDate(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
@@ -442,10 +445,12 @@ class GetScheduleByDate(TemplateContextView):
     def get_template(self):
         return 'edit_schedule_table.html'
 
+
 class DeleteTrainFromSchedule(ActionOnlyView):
     def act(self, request, *args, **kwargs):
         train_id=kwargs['train_id']
         Train.objects.get(id=train_id).delete()
+
 
 class UpdateScheduleTime(ActionOnlyView):
     def act(self, request, *args, **kwargs):
@@ -454,7 +459,6 @@ class UpdateScheduleTime(ActionOnlyView):
         train=Train.objects.get(id=train_id)
         train.departure=train.departure.replace(hour=int(times[0]),minute=int(times[1]))
         train.save()
-
 
 
 class SchedulerPage(TemplateContextView):
@@ -474,9 +478,12 @@ class DaySchedule(TemplateContextView):
         
         station_id = Admin.objects.get(username=request.session['user']['username']).station.id
         
-        file = open(f'json/default_day_schedule_{station_id}.json', 'r')
-        day_schedule = json.load(file)
-        file.close()
+        try:
+            file = open(f'json/default_day_schedule_{station_id}.json', 'r')
+            day_schedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            day_schedule = []
 
         next_id = 0
 
@@ -485,13 +492,15 @@ class DaySchedule(TemplateContextView):
 
         if request.method == "GET":
             context = {
-                "schedules": []
+                "schedules": [],
+                "add_button_required": True,
             }
 
             for schedule in day_schedule:
 
                 schedule['source'] = Station.objects.get(id=int(schedule['source'])).location
                 schedule['destination'] = Station.objects.get(id=int(schedule['destination'])).location
+                schedule['time'] = datetime(2022, 1, 1, *[int(t) for t in schedule['time'].split(":")]).strftime("%I:%M %p")
                 context['schedules'].append(schedule)
 
             return context
@@ -538,9 +547,11 @@ class DaySchedule(TemplateContextView):
 
             schedule['source'] = Station.objects.get(id=int(schedule['source'])).location
             schedule['destination'] = Station.objects.get(id=int(schedule['destination'])).location
+            schedule['time'] = datetime(2022, 1, 1, *[int(t) for t in schedule['time'].split(":")]).strftime("%I:%M %p")
 
             return {
-                "schedules": [schedule]
+                "schedules": [schedule],
+                "add_button_required": False,
             }
 
     def get_template(self):
@@ -553,11 +564,14 @@ class DeleteDaySchedule(ActionOnlyView):
         
         station_id = Admin.objects.get(username=request.session['user']['username']).station.id
 
-        print(f'PATH: json/default_day_schedule_{station_id}.json')
+        # print(f'PATH: json/default_day_schedule_{station_id}.json')
 
-        file = open(f'json/default_day_schedule_{station_id}.json', 'r')
-        all_schedules = json.load(file)
-        file.close()
+        try:
+            file = open(f'json/default_day_schedule_{station_id}.json', 'r')
+            all_schedules = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            all_schedules = []
 
         for i in range(len(all_schedules)):
             if all_schedules[i]['id'] == to_delete:
@@ -586,3 +600,121 @@ class AddScheduleFrom(TemplateContextView):
     
     def get_template(self):
         return "add_schedule_form.html"
+
+
+class WeekScheduleControls(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        today = datetime.today().strftime('%A')
+
+        try:
+            file =  open(f'json/default_week_schedule_{station_id}.json', 'r')
+            week_shedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            week_shedule = get_week_schedule_format()
+
+        for i in range(len(week_shedule)):
+
+            week_shedule[i]["index"] = i
+
+            if week_shedule[i]["day"] == today:
+                week_shedule[i]["active"] = "active"
+                today_schedule = self.process_schedule(week_shedule[i]["schedule"])
+                revert = i
+            else:
+                week_shedule[i]["active"] = ""
+        
+        return {
+            "week_days": week_shedule,
+            "today_schedule": today_schedule,
+            "revert": revert
+        }
+
+    def get_template(self):
+        return "week_schedule_controls.html"
+
+    def process_schedule(self, all_schedule):
+        for i in range(len(all_schedule)):
+            all_schedule[i]["source"] = Station.objects.get(id=int(all_schedule[i]["source"])).location
+            all_schedule[i]["destination"] = Station.objects.get(id=int(all_schedule[i]["destination"])).location
+            all_schedule[i]["time"] = datetime(2022, 1, 1, *[int(t) for t in all_schedule[i]["time"].split(":")]).strftime("%I:%M %p")
+
+        return all_schedule
+
+
+class RevertWeekDay(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        index = kwargs["index"]
+        
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        filename_default_day = f'json/default_day_schedule_{station_id}.json'
+        filename_default_week = f'json/default_week_schedule_{station_id}.json'
+
+        try:
+            file = open(filename_default_day, 'r')
+            all_schedules = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            all_schedules = []
+
+        try:
+            file =  open(filename_default_week, 'r')
+            week_shedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            week_shedule = get_week_schedule_format()
+
+        week_shedule[index]["schedule"] = all_schedules
+
+        file = open(filename_default_week, 'w')
+        json.dump(week_shedule, file)
+        file.close()
+
+        return {
+            "schedules": self.process_schedule(all_schedules),
+            "add_button_required": True,
+        }
+
+    def get_template(self):
+        return "schedule.html"
+
+    def process_schedule(self, all_schedule):
+        for i in range(len(all_schedule)):
+            all_schedule[i]["source"] = Station.objects.get(id=int(all_schedule[i]["source"])).location
+            all_schedule[i]["destination"] = Station.objects.get(id=int(all_schedule[i]["destination"])).location
+            all_schedule[i]["time"] = datetime(2022, 1, 1, *[int(t) for t in all_schedule[i]["time"].split(":")]).strftime("%I:%M %p")
+
+        return all_schedule
+
+
+class GetWeekDaySchedule(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        index = kwargs["index"]
+        
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        filename = f'json/default_week_schedule_{station_id}.json'
+
+        try:
+            file =  open(filename, 'r')
+            week_shedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            week_shedule = get_week_schedule_format()
+
+        return {
+            "schedules": self.process_schedule(week_shedule[index]["schedule"]),
+            "add_button_required": True
+        }
+    
+    def get_template(self):
+        return "schedule.html"
+
+    def process_schedule(self, all_schedule):
+        for i in range(len(all_schedule)):
+            all_schedule[i]["source"] = Station.objects.get(id=int(all_schedule[i]["source"])).location
+            all_schedule[i]["destination"] = Station.objects.get(id=int(all_schedule[i]["destination"])).location
+            all_schedule[i]["time"] = datetime(2022, 1, 1, *[int(t) for t in all_schedule[i]["time"].split(":")]).strftime("%I:%M %p")
+
+        return all_schedule
