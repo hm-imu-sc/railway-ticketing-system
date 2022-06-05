@@ -21,10 +21,10 @@ urlpatterns = [
     path("day_schedule/", views.DaySchedule.as_view(login_required=True, admin_required=True), name="dey_schedule"),
     path("add_schedule_form/", views.AddScheduleFrom.as_view(login_required=True, admin_required=True), name="add_schedule_form"),
     path("delete_day_schedule/<int:id>/", views.DeleteDaySchedule.as_view(login_required=True, admin_required=True), name="delete_day_schedule"),
-    path("edit_schedule_page",views.EditSchedulePage.as_view(),name="edit_schedule_page"),
-    path("get_schedule_by_date/<str:source>/<str:date>",views.GetScheduleByDate.as_view(),name="get_schedule_by_date"),
-    path("delete_train/<int:train_id>",views.DeleteTrainFromSchedule.as_view(),name="delete_train_from_schedule"),
-    path("update_train_time/<int:train_id>/<str:time>",views.UpdateScheduleTime.as_view(),name="delete_train_from_schedule"),
+    path("edit_schedule_page",views.EditSchedulePage.as_view(login_required=True, admin_required=True),name="edit_schedule_page"),
+    path("get_schedule_by_date/<str:source>/<str:date>",views.GetScheduleByDate.as_view(login_required=True, admin_required=True),name="get_schedule_by_date"),
+    path("delete_train/<int:train_id>",views.DeleteTrainFromSchedule.as_view(login_required=True, admin_required=True),name="delete_train_from_schedule"),
+    path("update_train_time/<int:train_id>/<str:time>",views.UpdateScheduleTime.as_view(login_required=True, admin_required=True),name="delete_train_from_schedule"),
 ]
 
 
