@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit schedule</title>
+</head>
+<body>
+    <label>Station: </label>
+    <select id="source">
+        {% for station in stations %}
+            <option value="{{ station.id }}">{{ station.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="time">Date</label>
+
+    <input type="date" id="time">
+
+    <button id="get_schedule">Get Schedule</button>
+
+    <div id="trains">
+    </div>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/edit_schedule_page.js' %}"></script>
+
+</body>
+</html>
