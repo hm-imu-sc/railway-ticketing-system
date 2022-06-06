@@ -1,5 +1,5 @@
 
-function enable_delete(){
+function enable_delete() {
     let url = $(this).attr("href");
     let id  = $(this).attr("delete");
     
@@ -19,6 +19,30 @@ function enable_delete(){
             else {
                 alert("Couldn't delete !!!");
             } 
+        }
+    });
+}
+
+function enable_week_schedule_delete() {
+
+    let id = $(this).attr("delete");
+
+    $.ajax({
+        "url": $(this).attr("href"),
+        "success": function(data) {
+            try {
+                data = JSON.parse(data);
+            }
+            catch (err) {
+                console.log("Invalid log !!!");
+            }
+
+            if (data["status"]) {
+                $("#day_schedule_" + id).remove();
+            }
+            else {
+                alert("Couldn't delete !!!");
+            }
         }
     });
 }
@@ -88,6 +112,7 @@ $("button#week_schedule").click(function(){
         "url": $(this).attr("href"),
         "success": function(data) {
             $(".manager_body").html(data);
+            $(".day_schedule_delete").click(enable_week_schedule_delete);
 
             $(".week_day").click(function(){
                 $(".week_day").removeClass('active');
@@ -99,10 +124,16 @@ $("button#week_schedule").click(function(){
                 $.ajax({
                     "url": $(this).attr("href"),
                     "success": function(data) {
+                        
                         let reverter = $(".revert");
+                        $(reverter).attr("revert", index);
+
                         $(".day_schedules").html(data);
                         $(".day_schedules").append(reverter);
+
                         $(".revert").click(enable_reverter);
+                        
+                        $(".day_schedule_delete").click(enable_week_schedule_delete);
                     }
                 });
             });      

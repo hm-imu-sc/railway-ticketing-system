@@ -1,7 +1,11 @@
 {% for schedule in schedules %}
     <div class="schedule" id="day_schedule_{{ schedule.id }}">
 
-        <button class="day_schedule_delete" delete="{{ schedule.id }}" href="{% url 'main:delete_day_schedule' id=schedule.id %}">
+        {% if week %}
+            <button class="day_schedule_delete" delete="{{ schedule.id }}" href="{% url 'main:delete_week_day_schedule' schedule_id=schedule_id day_id=schedule.id %}">
+        {% else %}
+            <button class="day_schedule_delete" delete="{{ schedule.id }}" href="{% url 'main:delete_day_schedule' id=schedule.id %}">
+        {% endif %}
             <i class="fad fa-trash"></i>
         </button>
 

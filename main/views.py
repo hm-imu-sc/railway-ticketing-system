@@ -705,7 +705,9 @@ class GetWeekDaySchedule(TemplateContextView):
 
         return {
             "schedules": self.process_schedule(week_shedule[index]["schedule"]),
-            "add_button_required": True
+            "schedule_id": index,
+            "add_button_required": True,
+            "week": True,
         }
     
     def get_template(self):
@@ -718,3 +720,33 @@ class GetWeekDaySchedule(TemplateContextView):
             all_schedule[i]["time"] = datetime(2022, 1, 1, *[int(t) for t in all_schedule[i]["time"].split(":")]).strftime("%I:%M %p")
 
         return all_schedule
+
+
+class DeleteWeekDaySchedule(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        filename = f'json/default_week_schedule_{station_id}.json'
+
+        day_id = kwargs["day_id"]
+        schedule_id = kwargs["schedule_id"]
+
+        file = open(filename, 'r')
+        week_schedules = json.load(file)
+        file.close()
+
+        for schedule in week_schedules[schedule_id]["schedule"]:
+            if schedule["id"] == day_id:
+                week_schedules[schedule_id]["schedule"].remove(schedule)
+
+                file = open(filename, 'w')
+                json.dump(week_schedules, file)
+                file.close()
+
+                return json.dumps({
+                    "status": True
+                })
+
+        return {
+            "status": False
+        }
+        
