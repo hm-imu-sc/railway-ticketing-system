@@ -31,6 +31,8 @@ urlpatterns = [
     path("delete_week_day_schedule/<int:schedule_id>/<int:day_id>/", views.DeleteWeekDaySchedule.as_view(login_required=True, admin_required=True), name="delete_week_day_schedule"),
     path("add_week_day_schedule_form/<int:index>/", views.AddWeekDayScheduleFrom.as_view(login_required=True, admin_required=True), name="add_week_day_schedule_form"),
     path("add_week_day_schedule/<int:index>/", views.AddWeekDaySchedule.as_view(login_required=True, admin_required=True), name="add_week_day_schedule"),
+    path("schedule_applier_controls/", views.ScheduleApplierControls.as_view(login_required=True, admin_required=True), name="schedule_applier_controls"),
+    path("apply_schedule/", views.ApplySchedule.as_view(login_required=True, admin_required=True), name="apply_schedule")
 ]
 
 

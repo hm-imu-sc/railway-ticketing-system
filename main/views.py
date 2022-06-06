@@ -837,3 +837,84 @@ class AddWeekDaySchedule(TemplateContextView):
 
     def get_template(self):
         return "schedule.html"
+
+
+class ScheduleApplierControls(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        return {
+            "today": datetime.today().strftime("%Y-%m-%d")
+        }
+    
+    def get_template(self):
+        return "schedule_applier_controls.html"
+
+
+class ApplySchedule(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+
+        # print(f"{request.GET.get('from')} -> {request.GET.get('to')}")
+        # return
+
+        _from = datetime(*[int(i) for i in request.GET.get("from").split("-")])
+        _to = datetime(*[int(i) for i in request.GET.get("to").split("-")])
+
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        filename = f'json/default_week_schedule_{station_id}.json'
+
+        idx = {
+            "Fri": 0,
+            "Sat": 1,
+            "Sun": 2,
+            "Mon": 3,
+            "Tue": 4,
+            "Wed": 5,
+            "Thu": 6,
+        }
+
+        try:
+            file = open(filename, 'r')
+            week_schedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            week_schedule = get_week_schedule_format()
+
+        s = 0
+
+        while _from <= _to:
+            day = datetime(_from.year, _from.month, _from.day).strftime("%a")
+            
+            for schedule in week_schedule[idx[day]]["schedule"]:
+                
+                date = datetime(_from.year, _from.month, _from.day, *[int(i) for i in schedule["time"].split(":")])
+                
+                # print(f"{date} | {date.strftime('%Y-%m-%d %I:%M %p')} | {schedule['time']}")
+
+                train = Train.objects.create(
+                    source=Station.objects.get(id=int(schedule["source"])),
+                    destination=Station.objects.get(id=int(schedule["destination"])),
+                    departure=date
+                )
+
+                for car in schedule["cars"]:
+                    car = Car.objects.create(
+                        train=train,
+                        car_type=car["type"],
+                        fare=car["fare"],
+                        number_of_seats=car["seats_per_car"]
+                    )
+
+                    for i in range(car.number_of_seats):
+                        # print(f"creating seat: {s}")
+                        # s += 1
+                        Seat.objects.create(car=car)
+                    
+
+            _from += timedelta(days=1)
+
+        # print(request.GET)
+
+        return json.dumps({
+            "status": True,
+            "message": "Schedules applied successfully !!!",
+        })
+

@@ -1,0 +1,18 @@
+<form class="apply_schedule" method="GET" action="{% url 'main:apply_schedule' %}">
+    
+    <div>
+        <label for="from">From:</label>
+        <input type="date" id="from" name="from" min="{{ today }}" value="{{ today }}">
+    </div>
+    <div>
+        <label for="to">To:</label>
+        <input type="date" id="to" name="to" min="{{ today }}" value="{{ today }}">
+    </div>
+    <div>
+        <input class="submit" type="submit" value="Apply">
+    </div>
+</form>
+
+<div class="message_box">
+
+</div>

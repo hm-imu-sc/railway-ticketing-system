@@ -178,6 +178,39 @@ $("button#week_schedule").click(function() {
     });
 });
 
+$("button#schedule_applier").click(function() {
+    $.ajax({
+        "url": $(this).attr("href"),
+        "success": function(data) {
+            $(".manager_body").html(data);
+            $(".apply_schedule").submit(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    "url": $(this).attr("action"),
+                    "type": "GET",
+                    "data": $(this).serialize(),
+                    "success": function(data) {
+                        try {
+                            data = JSON.parse(data);
+                        }
+                        catch (err) {
+                            console.log("invalid log !!!");
+                        }
+
+                        if (data["status"]) {
+                            $(".message_box").html(data["message"]);
+                        }
+                        else {
+                            alert("Couldn't apply the schedules !!!");
+                        }
+                    }
+                });
+            });
+        }
+    });
+});
+
 $("#schedule_add_day").click(get_schedule_form);
 
 $(".modal").click(function(e) {

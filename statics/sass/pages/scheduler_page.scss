@@ -339,6 +339,49 @@ h1 {
             border-top-right-radius: 10px;
         }
     }
+
+    .apply_schedule {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        div {
+            display: flex;
+            flex-direction: row;
+
+            label {
+                padding: 20px;  
+                margin-left: 5px;
+                margin-bottom: 3px;
+                font-size: 20px;
+                color: $color_default;
+                font-size: 25px;
+            }
+            
+            input {
+                border: 2px solid $color_default;
+                border-radius: 15px;
+                padding: 20px;      
+                color: $color_default;
+                font-size: 25px;
+            }
+        }
+
+        .submit {
+            margin-left: 20px;
+            padding: 0 70px;
+            cursor: pointer;
+            &:hover {
+                color: #E9EFC0;
+                background-color: $color_default;
+            }
+        }
+    }
+
+    .message_box {
+        margin: 20px 0;
+        text-align: center;
+    }
 }
 
 .modal {
