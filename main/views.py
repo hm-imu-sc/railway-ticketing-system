@@ -673,8 +673,10 @@ class RevertWeekDay(TemplateContextView):
         file.close()
 
         return {
+            "schedule_id": index,
             "schedules": self.process_schedule(all_schedules),
             "add_button_required": True,
+            "week": True,
         }
 
     def get_template(self):
@@ -750,3 +752,88 @@ class DeleteWeekDaySchedule(ActionOnlyView):
             "status": False
         }
         
+
+class AddWeekDayScheduleFrom(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        return {
+            'index': kwargs['index'],
+            'source': Admin.objects.get(username=request.session['user']['username']).station.id,
+            'stations': Station.objects.all(),
+            'current_datetime': datetime.today().strftime("%H:%M")
+        }
+
+    def get_template(self):
+        return "add_week_day_schedule_form.html"
+
+
+class AddWeekDaySchedule(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+
+        index = kwargs["index"]
+        station_id = Admin.objects.get(username=request.session['user']['username']).station.id
+        filename = f'json/default_week_schedule_{station_id}.json'
+
+        try:
+            file = open(filename, 'r')
+            week_schedule = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            week_schedule = get_week_schedule_format()
+
+        next_id = 0
+
+        for schedule in week_schedule[index]["schedule"]:
+            next_id = max(next_id, schedule['id'])
+
+        schedule = {
+            'id': next_id+1,
+            'source': request.POST.get('source'),
+            'destination': request.POST.get('dest'),
+            'time': request.POST.get('dept'),
+            'cars': [
+                {
+                    'type': 'First Class Birth',
+                    'number_of_cars': int(request.POST.get('fcb')),
+                    'seats_per_car': 24,
+                    'fare': int(request.POST.get('fcb_fare'))
+                },
+                {
+                    'type': 'First Class Seat',
+                    'number_of_cars': int(request.POST.get('fcs')),
+                    'seats_per_car': 40,
+                    'fare': int(request.POST.get('fcs_fare'))
+                },
+                {
+                    'type': 'Shovan Chair',
+                    'number_of_cars': int(request.POST.get('sc')),
+                    'seats_per_car': 40,
+                    'fare': int(request.POST.get('sc_fare'))
+                },
+                {
+                    'type': 'Shovan',
+                    'number_of_cars': int(request.POST.get('s')),
+                    'seats_per_car': 56,
+                    'fare': int(request.POST.get('s_fare'))
+                },
+            ]
+        }
+
+        week_schedule[index]["schedule"].append(schedule)
+
+        file = open(filename, 'w')
+        json.dump(week_schedule, file)
+        file.close()
+
+        schedule['source'] = Station.objects.get(id=int(schedule['source'])).location
+        schedule['destination'] = Station.objects.get(id=int(schedule['destination'])).location
+        schedule['time'] = datetime(2022, 1, 1, *[int(t) for t in schedule['time'].split(":")]).strftime("%I:%M %p")
+
+        return {
+            "schedule_id": index,
+            "schedules": [schedule],
+            "add_button_required": False,
+            "week": True,
+        }
+
+    def get_template(self):
+        return "schedule.html"

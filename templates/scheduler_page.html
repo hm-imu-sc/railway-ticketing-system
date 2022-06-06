@@ -15,7 +15,7 @@
         <h1>Manage Scheduling for {{ railway_name }}</h1>
 
         <div class="schedule_controls">
-            <button id="day_schedule">
+            <button id="day_schedule" href="{% url 'main:dey_schedule' %}">
                 Default Day Schedule
             </button>    
             <button id="week_schedule" href="{% url 'main:week_schedule_controls' %}">

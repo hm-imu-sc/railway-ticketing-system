@@ -54,7 +54,7 @@
         </div> 
     {% endfor %}
 
-    <button class="schedule_add" id="schedule_add_day">
+    <button class="schedule_add" id="schedule_add_day" href="{% url 'main:add_week_day_schedule_form' index=revert %}">
         <i class="fas fa-plus"></i>
     </button>
 

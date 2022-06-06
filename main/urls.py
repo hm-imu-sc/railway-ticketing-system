@@ -29,6 +29,8 @@ urlpatterns = [
     path("revert_week_day/<int:index>/", views.RevertWeekDay.as_view(login_required=True, admin_required=True), name="revert_week_day"),
     path("get_week_day_schedule/<int:index>/", views.GetWeekDaySchedule.as_view(login_required=True, admin_required=True), name="get_week_day_schedule"),
     path("delete_week_day_schedule/<int:schedule_id>/<int:day_id>/", views.DeleteWeekDaySchedule.as_view(login_required=True, admin_required=True), name="delete_week_day_schedule"),
+    path("add_week_day_schedule_form/<int:index>/", views.AddWeekDayScheduleFrom.as_view(login_required=True, admin_required=True), name="add_week_day_schedule_form"),
+    path("add_week_day_schedule/<int:index>/", views.AddWeekDaySchedule.as_view(login_required=True, admin_required=True), name="add_week_day_schedule"),
 ]
 
 
