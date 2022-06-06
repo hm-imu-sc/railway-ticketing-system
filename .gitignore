@@ -2,6 +2,7 @@ downloads
 .pyc
 .idea
 __pycache__
+**/__pycache__
 .sass-cache
 migration
 migrations
