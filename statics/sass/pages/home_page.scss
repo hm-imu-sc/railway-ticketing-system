@@ -215,7 +215,6 @@ h2 {
 
             td:nth-child(4) {
                 .seat_status {
-                    cursor: pointer;
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -233,16 +232,7 @@ h2 {
                         border-radius: 5px;
                         margin: 5px;
                         padding: 5px;
-                        // background-color: transparent;
                     }
-
-                    &:hover {
-                        background-color: #E9EFC0;
-                    }
-
-                    // &:hover div {
-                    //     background-color: ;
-                    // }
                 }
 
                 .status_0 {
