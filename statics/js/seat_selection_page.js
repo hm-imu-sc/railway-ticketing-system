@@ -1,25 +1,27 @@
+
+let seats = [];
+
 $("#number_of_seats").change(function(){
     $("span.number_of_seats").text($(this).val());
 });
 
 $("button.check").click(function(){
     let number_of_seats = Number.parseInt($("#number_of_seats").val());
-    let car = Number.parseInt($("#car_id").val()) - 1;
+    let url = $("#car_type").val().split("-")[0]+number_of_seats+"/";
 
-    if (car == -1) {
-        return;
-    }
+    $.ajax({
+        "url": url,
+        "success": function(data) {
+            try {
+                data = JSON.parse(data);
+            }
+            catch (err) {
+                console.log(err.message);
+            }
 
-    let car_types = ['FCB', 'FCS', "SC", "S"];
-
-    $("#seats").text('');
-
-    for (let i=6; i<number_of_seats+6; i++) {
-        if (i!=6) {
-            $("#seats").append(", ");
-        }
-        $("#seats").append(""+car_types[car]+"-"+i);
-    }
+            seats = data["seats"];
+        } 
+    });
 });
 
 $("button.purchase").click(function() {

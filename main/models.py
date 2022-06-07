@@ -29,7 +29,7 @@ class Train(models.Model):
     tickets_available_from = models.DateField(null=True)
 
     def __str__(self):
-        return f'Train id = {self.id} || Starts from {self.source.name} || destination {self.destination.name}'
+        return f'{self.id} | {self.source.location} | {self.destination.location} | {self.departure.strftime("%Y-%m-%d %I:%M %p")}'
 
 
 class Car(models.Model):
@@ -39,7 +39,7 @@ class Car(models.Model):
     number_of_seats = models.IntegerField(default=20)
 
     def __str__(self):
-        return f'Car id = {self.id} || Part of train with train id {self.train.id}'
+        return f'{self.car_type} | {self.fare} | {self.number_of_seats}'
 
 
 class Seat(models.Model):

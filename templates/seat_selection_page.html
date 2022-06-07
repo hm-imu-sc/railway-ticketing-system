@@ -15,11 +15,11 @@
         
         <div class="seat_criterias">
             <div>
-                <label for="car_id">Car type: </label>
-                <select name="car_id" id="car_id">
+                <label for="car_type">Car type: </label>
+                <select name="car_type" id="car_type">
                     <option value="0">Select</option>
                     {% for car in cars %}
-                        <option value="{{ car.id }}">{{ car.name }} - Fare: {{ car.fare }}</option>
+                        <option value="{% url 'main:get_seats' train_id=train_id car_type_id=car.id number_of_seats='-' %}">{{ car.name }} - Fare: {{ car.fare }}</option>
                     {% endfor %}
                 </select>
             </div>

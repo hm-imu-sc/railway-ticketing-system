@@ -31,7 +31,7 @@ class HomePage(TemplateContextView):
         x -= timedelta(days=day_seq[x.strftime("%a")])
 
         return {
-            'stations': [station.location for station in stations],
+            'stations': stations,
             'week_0': [
                 {
                     'day': day, 
@@ -85,29 +85,37 @@ class SeatSelectionPage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
         train_id = kwargs['train_id']
         train = Train.objects.get(id=train_id)
+
+        car_types = [
+            "First Class Berth",
+            "First Class Seat",
+            "Shovan Chair",
+            "Shovan",
+        ]
+
+        c = 0
+
+        distinct_cars = []
+
+        all_cars = list(train.car_set.all())
+
+        for car in all_cars:
+            if car.car_type == car_types[c]:
+                distinct_cars.append({
+                    "id": c,
+                    "name": car.car_type,
+                    "fare": car.fare,
+                })
+                c+=1
+
+                if c == 4:
+                    break
+
+        print(distinct_cars)
+
         return {
-            'cars': [
-                {
-                    'id': '1',
-                    'name': 'First Class Berth',
-                    'fare': '1500',
-                },
-                {
-                    'id': '2',
-                    'name': 'First Class Seat',
-                    'fare': '1250',
-                },
-                {
-                    'id': '3',
-                    'name': 'Shovan Chair',
-                    'fare': '750',
-                },
-                {
-                    'id': '4',
-                    'name': 'Shovan',
-                    'fare': '500',
-                },
-            ]
+            'train_id': train_id,
+            'cars': distinct_cars,
         }
 
     def get_template(self):
@@ -117,29 +125,27 @@ class SeatSelectionPage(TemplateContextView):
 class GetSchedule(TemplateContextView):
 
     def get_context(self, request, *args, **kwargs):
-        date = kwargs['date']
-        source = kwargs['source']
-        destination = kwargs['destination']
+        date = datetime(*[int(i) for i in kwargs['date'].split("-")[::-1]])
+        source = Station.objects.get(id=int(kwargs['source']))
+        destination = Station.objects.get(id=int(kwargs['destination']))
 
         train_schedules = []
 
         for train in Train.objects.all():
 
-            # print(f'{train.departure.day}-{train.departure.month}-{train.departure.year} | {date}')
-
-            if f'{train.departure.day}-{train.departure.month}-{train.departure.year}' == date and train.source.location == source and train.destination.location == destination:
+            if datetime(train.departure.year, train.departure.month, train.departure.day) == date and train.source == source and train.destination == destination:
+                
                 seats = 0
                 booked = 0
 
                 for car in train.car_set.all():
                     seats += car.number_of_seats
-                    for seat in car.seat_set.all():
-                        booked += seat.is_sold
-            
+                    booked += len(car.seat_set.all())
+
                 booked_percent = 0 if booked == 0 else int(seats/booked)*100
                 booked_class = ''
 
-                if seat == booked:
+                if seats == booked:
                     booked_class = 'status_100'
                 elif booked_percent >= 75:
                     booked_class = 'status_75'
@@ -152,8 +158,8 @@ class GetSchedule(TemplateContextView):
 
                 train_schedules.append({
                     'train_id': train.id,
-                    'source': source,
-                    'destination': destination,
+                    'source': source.location,
+                    'destination': destination.location,
                     'time': train.departure.strftime("%I:%M %p"),
                     'fare_range': {
                         'max': train.car_set.all().order_by('-fare')[0].fare,
@@ -168,6 +174,20 @@ class GetSchedule(TemplateContextView):
 
     def get_template(self):
         return 'train_schedules.html'
+
+
+class GetSeats(APIOnlyView):
+    def get_return(self, request, *args, **kwargs):
+        
+        train = Train.objects.get(id=kwargs["train_id"])
+        car_type_id = kwargs["car_type_id"]
+        number_of_seats = kwargs["number_of_seats"]
+
+        print(f"{train.id} | {car_type_id} | {number_of_seats}")
+
+        return {
+            "message": "path clear so far !!!"
+        }
 
 
 class PassengerRegistrationPage(TemplateContextView):
@@ -248,7 +268,7 @@ class Login(NoTemplateView):
                     'username': username,
                     'domain': domain
                 }
-                # request.session.set_expire(timedelta(days=1))
+                request.session.set_expiry(3600*24)
 
                 if domain == 'admin':
                     self.redirect_to = 'main:admin_home_page'
@@ -513,7 +533,7 @@ class DaySchedule(TemplateContextView):
                 'time': request.POST.get('dept'),
                 'cars': [
                     {
-                        'type': 'First Class Birth',
+                        'type': 'First Class Berth',
                         'number_of_cars': int(request.POST.get('fcb')),
                         'seats_per_car': 24,
                         'fare': int(request.POST.get('fcb_fare'))
@@ -792,7 +812,7 @@ class AddWeekDaySchedule(TemplateContextView):
             'time': request.POST.get('dept'),
             'cars': [
                 {
-                    'type': 'First Class Birth',
+                    'type': 'First Class Berth',
                     'number_of_cars': int(request.POST.get('fcb')),
                     'seats_per_car': 24,
                     'fare': int(request.POST.get('fcb_fare'))
@@ -895,18 +915,21 @@ class ApplySchedule(ActionOnlyView):
                     departure=date
                 )
 
-                for car in schedule["cars"]:
-                    car = Car.objects.create(
-                        train=train,
-                        car_type=car["type"],
-                        fare=car["fare"],
-                        number_of_seats=car["seats_per_car"]
-                    )
+                for car_info in schedule["cars"]:
 
-                    for i in range(car.number_of_seats):
-                        # print(f"creating seat: {s}")
-                        # s += 1
-                        Seat.objects.create(car=car)
+                    for c in range(car_info["number_of_cars"]):
+
+                        car = Car.objects.create(
+                            train=train,
+                            car_type=car_info["type"],
+                            fare=car_info["fare"],
+                            number_of_seats=car_info["seats_per_car"]
+                        )
+
+                        # for i in range(car.number_of_seats):
+                            # print(f"creating seat: {s}")
+                            # s += 1
+                            # Seat.objects.create(car=car)
                     
 
             _from += timedelta(days=1)
