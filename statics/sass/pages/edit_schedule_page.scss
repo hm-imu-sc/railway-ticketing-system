@@ -1,0 +1,86 @@
+@import "../utils/_variables";
+@import "../layouts/_navbar";
+@import "../utils/_scroll";
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 7%;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
+    padding: 20px;
+    width: 620px;
+    margin: 7% auto 30px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    div {
+        margin: 10px 20px;
+        
+        label, select, input {
+            padding: 20px;
+            color: $color_default;
+        }
+
+        select, input {
+            border: 2px solid $color_default;
+            border-radius: 10px;
+        }
+    }
+
+    button {
+        margin: 10px 20px;
+        padding: 20px 35px;
+        color: $color_default;
+        border: 2px solid $color_default;
+        border-radius: 15px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $color_default;
+            color: beige;
+        }
+    }
+}
+
+table {
+    border: 2px solid $color_default;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px auto;
+
+    th, td {
+        color: $color_default;
+        padding: 10px 30px;
+        border: 1px solid $color_default;
+    }
+
+    td {
+        input {
+            color: $color_default;
+            padding: 10px 20px;
+            border: none;
+            // border: 1px solid $color_default;
+            // border-radius: 5px;
+        }
+
+        button {
+            color: $color_default;
+            border: 1px solid $color_default;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 0 20px;
+
+            &:hover {
+                background-color: $color_default;
+                color: rgb(221, 229, 190);
+            }
+        }
+    }
+}

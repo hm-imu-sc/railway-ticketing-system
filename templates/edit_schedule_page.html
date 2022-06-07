@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit schedule</title>
-</head>
-<body>
-    <label>Station: </label>
-    <select id="source">
-        {% for station in stations %}
-            <option value="{{ station.id }}">{{ station.name }}</option>
-        {% endfor %}
-    </select>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/edit_schedule_page.css' %}">
+        <title>Railway Ticketing System</title>
+    </head>
+    <body>
+        {% include "widgets/navbar.html" %}
+        
+        <h1>Edit Schedules</h1>
 
-    <label for="time">Date</label>
+        <div class="controls">
+            <div class="control">
+                <label>Station: </label>
+                <select id="source">
+                    {% for station in stations %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                    {% endfor %}
+                </select>                
+            </div>
 
-    <input type="date" id="time">
+            <div class="contro">
+                <label for="time">Date:</label>
+                <input type="date" id="time" value="{{ date }}">                
+            </div>
+        
+            <button id="get_schedule">Get Schedule</button>            
+        </div>
 
-    <button id="get_schedule">Get Schedule</button>
-
-    <div id="trains">
-    </div>
-
-    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'js/edit_schedule_page.js' %}"></script>
-
-</body>
+        <div id="trains">
+        </div>
+    
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+        <script src="{% static 'js/edit_schedule_page.js' %}"></script>
+    </body>
 </html>

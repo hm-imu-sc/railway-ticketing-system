@@ -379,7 +379,7 @@ class PassengerRegistration(NoTemplateView):
             return
 
     def get_redirection(self):
-        return 'main:passenger_registration_page'
+        return 'main:login_page'
 
 
 class LoginPage(TemplateContextView):
@@ -598,6 +598,7 @@ class EditSchedulePage(TemplateContextView):
     def get_context(self, request, *args, **kwargs):
         context = {}
         context['stations'] = Station.objects.all()
+        context["date"] = datetime.now().strftime("%Y-%m-%d")
         return context
     def get_template(self):
         return 'edit_schedule_page.html'
