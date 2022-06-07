@@ -14,7 +14,7 @@
     <div class="nav-item-secondary">
         {% if session.user.login_status %}
             {% if session.user.domain == 'passenger' %}
-                <a class="nav-item {{ nav.trips_page }}" href="#">My Trips</a>
+                <a class="nav-item {{ nav.my_trips_page }}" href="{% url 'main:my_trips_page' %}">My Trips</a>
             {% endif %}
 
             <a class="nav-item {{ nav.profile_page }}" href="#">Profile</a>

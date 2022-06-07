@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'fonts/font-awesome-pro-5/css/all.css' %}">
+        <link rel="stylesheet" href="{% static 'css/get_ticket_page.css' %}">
+        <title>Railway Ticketing System</title>
+    </head>
+    <body>
+        {% include "widgets/navbar.html" %}
+        
+        <h1>
+            Ticket
+        </h1>
+        
+        <div class="ticket">
+            <div class="passenger">
+                <table>
+                    <tr>
+                        <td>Passenger Name</td>
+                        <td>: {{ passenger_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment amount</td>
+                        <td>: {{ payment_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td>Seats</td>
+                        <td>: {{ seat_string }}</td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="route">
+                <div class="dept">
+                    <label>
+                        Departure:
+                    </label>
+                    <table>
+                        <tr>
+                            <td>From</td>
+                            <td>: {{ from.location }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td>: {{ from.date }}</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>: {{ from.time }}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="arrival">
+                    <label>
+                        Arrival:
+                    </label>
+                    <table>
+                        <tr>
+                            <td>To</td>
+                            <td>: {{ to.location }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td>: {{ to.date }}</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>: {{ to.time }}</td>
+                        </tr>
+                    </table>
+                </div>                
+            </div>
+        </div>
+
+        <button class="download">
+            <i class="fad fa-download"></i>
+        </button>
+
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+        <script src="{% static 'js/get_ticket_page.js' %}"></script>
+    </body>
+</html>

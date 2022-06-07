@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'fonts/font-awesome-pro-5/css/all.css' %}">
+        <link rel="stylesheet" href="{% static 'css/my_trips_page.css' %}">
+        <title>Railway Ticketing System</title>
+    </head>
+    <body>
+        {% include "widgets/navbar.html" %}
+        
+        <h1>Trips History</h1>
+        
+        <div class="trips">
+            <h2>Upcoming Trips:</h2>
+
+            <table border="1" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Seats</th>
+                        <th>Departure</th>
+                        <th>Total Bill</th>
+                        <th>Tickets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in upcoming_trips %}
+                        <tr>
+                            <td>{{ trip.source }} <i class="fal fa-long-arrow-right"></i> {{ trip.destination }}</td>
+                            <td>{{ trip.seat_string }}</td>
+                            <td>{{ trip.departure }}</td>
+                            <td>{{ trip.payment_amount }} BDT</td>
+                            <td>
+                                <a class="ticket" href="{% url 'main:get_ticket_page' payment_id=trip.payment_id %}">
+                                    <i class="fad fa-ticket"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+        </div>
+
+        <div class="trips">
+            <h2>Previous Trips:</h2>
+
+            <table border="1" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Seats</th>
+                        <th>Departure</th>
+                        <th>Total Bill</th>
+                        <th>Tickets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for trip in previous_trips %}
+                        <tr>
+                            <td>{{ trip.source }} <i class="fal fa-long-arrow-right"></i> {{ trip.destination }}</td>
+                            <td>{{ trip.seat_string }}</td>
+                            <td>{{ trip.departure }}</td>
+                            <td>{{ trip.payment_amount }} BDT</td>
+                            <td>
+                                <a class="ticket" href="{% url 'main:get_ticket_page' payment_id=trip.payment_id %}">
+                                    <i class="fad fa-ticket"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+        <script src="{% static 'js/my_trips_page.js' %}"></script>
+    </body>
+</html>
