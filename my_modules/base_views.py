@@ -44,6 +44,7 @@ class View:
         cls.logout_required = logout_required
         return cls().respond
 
+
 class TemplateContextView(View):
 
     def get_template(self):
@@ -58,6 +59,7 @@ class TemplateContextView(View):
             'session': dict(request.session)
         })
 
+
 class NoTemplateView(View):
 
     def act(self, request, *args, **kwargs):
@@ -69,6 +71,7 @@ class NoTemplateView(View):
     def _get_requested_response(self, request, *args, **kwargs):
         self.act(request, *args, **kwargs)
         return redirect(self.get_redirection())
+
 
 class ActionOnlyView(View):
 
@@ -82,6 +85,7 @@ class ActionOnlyView(View):
             return HttpResponse('')
 
         return HttpResponse(ret)
+
 
 class APIOnlyView(View):
     

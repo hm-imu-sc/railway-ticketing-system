@@ -13,6 +13,16 @@ class Passenger(models.Model):
         return f'Passenger id = {self.id} || {self.username}'
 
 
+class Payment(models.Model):
+    passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE, null=True)
+    amount = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    date = models.DateField(null=True)
+    seat_serial = models.IntegerField(null=True)
+
+    def __str__(self):
+        return f"{self.passenger.name} | {self.amount} | {self.date}"
+    
+
 class Station(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
@@ -39,7 +49,7 @@ class Car(models.Model):
     number_of_seats = models.IntegerField(default=20)
 
     def __str__(self):
-        return f'{self.car_type} | {self.fare} | {self.number_of_seats}'
+        return f'{self.train.id} | {self.car_type} | {self.fare} | {self.number_of_seats}'
 
 
 class Seat(models.Model):
@@ -47,6 +57,8 @@ class Seat(models.Model):
     watching_by = models.IntegerField(default=0)
     bought_by = models.ForeignKey(Passenger, on_delete=models.CASCADE, null=True)
     is_sold = models.BooleanField(default=False)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
         return f'Seat id = {self.id} || Part of car with car id {self.car.id} which is a part of train with train id {self.car.train.id}'
 

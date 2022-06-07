@@ -17,7 +17,7 @@
             <div>
                 <label for="car_type">Car type: </label>
                 <select name="car_type" id="car_type">
-                    <option value="0">Select</option>
+                    <option value="-1" selected>Select</option>
                     {% for car in cars %}
                         <option value="{% url 'main:get_seats' train_id=train_id car_type_id=car.id number_of_seats='-' %}">{{ car.name }} - Fare: {{ car.fare }}</option>
                     {% endfor %}
@@ -41,9 +41,10 @@
         <div class="bill_info">
             <span>Total bill: </span>
             <span class="bill"></span>
-            <button id="pay">Pay</button>
+            <button id="pay" href="#">Pay</button>
         </div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'js/seat_selection_page.js' %}"></script>
     </body>

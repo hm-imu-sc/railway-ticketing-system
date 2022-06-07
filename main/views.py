@@ -1,7 +1,7 @@
 
 from my_modules.utils import get_week_schedule_format
 from my_modules.base_views import APIOnlyView, TemplateContextView, NoTemplateView, ActionOnlyView
-from main.models import Station, Passenger, Admin, Train, Car, Seat
+from main.models import Station, Passenger, Admin, Train, Car, Seat, Payment
 from django.utils.dateparse import parse_datetime
 from django.shortcuts import render,redirect
 from datetime import datetime, timedelta
@@ -9,7 +9,7 @@ from hashlib import sha256
 import zoneinfo
 import json
 from django.http import HttpResponse
-
+import random
 
 class HomePage(TemplateContextView):
     
@@ -104,7 +104,7 @@ class SeatSelectionPage(TemplateContextView):
                 distinct_cars.append({
                     "id": c,
                     "name": car.car_type,
-                    "fare": car.fare,
+                    "fare": int(car.fare),
                 })
                 c+=1
 
@@ -181,13 +181,169 @@ class GetSeats(APIOnlyView):
         
         train = Train.objects.get(id=kwargs["train_id"])
         car_type_id = kwargs["car_type_id"]
-        number_of_seats = kwargs["number_of_seats"]
+        number_of_seats = int(kwargs["number_of_seats"])
 
-        print(f"{train.id} | {car_type_id} | {number_of_seats}")
+        car_types = [
+            "First Class Berth",
+            "First Class Seat",
+            "Shovan Chair",
+            "Shovan",
+        ]
+
+        total_seats = 0
+        seats = 0
+        fare = 0
+        status = True
+        message = "All seats are available !!!"
+
+        for car in train.car_set.filter(car_type=car_types[car_type_id]):
+            fare = car.fare
+            total_seats += car.number_of_seats
+            seats += len(car.seat_set.all())
+
+        # print(f"{train.id} | {total_seats} | {seats}")
+
+        if total_seats-seats < number_of_seats:
+            status = False
+            message = f"Sorry! only {total_seats-seats} seats available in this car !!!"
 
         return {
-            "message": "path clear so far !!!"
+            "status": status,
+            "seats": seats,
+            "fare": int(fare),
+            "car": car_type_id,
+            "message": message
         }
+
+
+class SeatPurchase(ActionOnlyView):
+    def act(self, request, *args, **kwargs):
+        
+        car_types = [
+            "First Class Berth",
+            "First Class Seat",
+            "Shovan Chair",
+            "Shovan",
+        ]
+
+        train = Train.objects.get(id=kwargs["train_id"])
+        car_type_id = kwargs["car_type_id"]
+        number_of_seats = int(kwargs["number_of_seats"])
+        passenger = Passenger.objects.get(username=request.session["user"]["username"])
+        
+        seats = 0
+
+        for car in train.car_set.filter(car_type=car_types[car_type_id]):
+            seats += len(car.seat_set.all())
+
+        payment = Payment.objects.create(
+            passenger=passenger,
+            amount=train.car_set.filter(car_type=car_types[car_type_id])[0].fare*number_of_seats,
+            date=datetime(train.departure.year, train.departure.month, train.departure.day),
+            seat_serial=seats
+        )
+
+        for car in train.car_set.filter(car_type=car_types[car_type_id]):
+
+            available = car.number_of_seats - len(car.seat_set.all())
+
+            if available > 0 and number_of_seats > 0:
+
+                purchasing_now = min(available, number_of_seats)
+
+                for i in range(purchasing_now):
+                    Seat.objects.create(
+                        car=car,
+                        bought_by=passenger,
+                        is_sold=True,
+                        payment=payment
+                    )
+
+                number_of_seats -= purchasing_now
+
+        return json.dumps({
+            "status": True,
+            "message": "Ticket purchase and payment successfull !!!\nYou can download your tickets from \"My Trips\""
+        })
+
+
+class MyTripsPage(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        
+        passenger = Passenger.objects.get(username=request.session["user"]["username"])
+        
+        upcoming_trips = []
+        previous_trips = []
+
+        for payment in Payment.objects.filter(passenger=passenger):
+            number_of_seats = len(payment.seat_set.all())
+            train = payment.seat_set.first().car.train
+            car_type = payment.seat_set.first().car.car_type
+
+            seat_prefix = "".join([word[0] for word in car_type.split()])
+            seat_string = ", ".join(f"{seat_prefix}-{seat}" for seat in range(payment.seat_serial + number_of_seats)[payment.seat_serial:])
+
+            trip = {
+                "source": train.source.location,
+                "destination": train.destination.location,
+                "departure": train.departure.strftime("%d-%m-%Y %I:%M %p"),
+                "seat_string": seat_string,
+                "payment_amount": payment.amount,
+                "payment_id": payment.id,
+            }
+
+            departure = datetime(train.departure.year, train.departure.month, train.departure.day, train.departure.hour, train.departure.minute)
+
+            if departure < datetime.now():
+                previous_trips.append(trip)
+            else:
+                upcoming_trips.append(trip)
+
+        # print(upcoming_trips)
+        # print(previous_trips)
+
+        return {
+            'upcoming_trips': upcoming_trips,
+            'previous_trips': previous_trips,
+            'nav': {
+                "my_trips_page": "active"
+            }
+        }
+
+    def get_template(self):
+        return "my_trips_page.html"
+
+
+class GetTicketPage(TemplateContextView):
+    def get_context(self, request, *args, **kwargs):
+        
+        passenger = Passenger.objects.get(username=request.session["user"]["username"])
+        payment = Payment.objects.get(id=kwargs["payment_id"])
+        car_type = payment.seat_set.first().car.car_type
+        train = payment.seat_set.first().car.train
+
+        number_of_seats = len(payment.seat_set.all())
+        seat_prefix = "".join([word[0] for word in car_type.split()])
+        seat_string = ", ".join(f"{seat_prefix}-{seat}" for seat in range(payment.seat_serial + number_of_seats)[payment.seat_serial:])
+
+        return {
+            "passenger_name": passenger.name,
+            "seat_string": seat_string,
+            "payment_amount": payment.amount,
+            "from": {
+                "location": train.source.location,
+                "date": train.departure.strftime("%d-%m-%Y"),
+                "time": train.departure.strftime("%I:%M %p")
+            },
+            "to": {
+                "location": train.destination.location,
+                "date": (train.departure+timedelta(hours=random.choice([6,7,8,9,10,12]))).strftime("%d-%m-%Y"),
+                "time": (train.departure+timedelta(hours=random.choice([6,7,8,9,10,12]))).strftime("%I:%M %p")
+            }
+        }
+
+    def get_template(self):
+        return "get_ticket_page.html"
 
 
 class PassengerRegistrationPage(TemplateContextView):
