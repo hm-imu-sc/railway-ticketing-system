@@ -615,8 +615,11 @@ class GetScheduleByDate(TemplateContextView):
         day = date.split('-')[2]
         #print(f"{year} {month} {day}")
         trains = Train.objects.filter(departure__year=year,departure__month=month,departure__day=day,source=source)
+        modded_trains = []
+        for train in trains:
+            modded_trains.append((train,train.departure.strftime("%H:%M")))
         #print(len(trains))
-        context['trains']=trains;
+        context['trains']=modded_trains
 
         return context
     def get_template(self):

@@ -6,11 +6,11 @@
         <th>Actions</th>
     </tr>
     {% for train in trains %}
-        <tr id="dataOf{{ train.id }}">
-            <td id="sourceOf{{ train.id }}">{{ train.source.name }}</td>
-            <td id="destinationOf{{ train.id }}">{{ train.destination.name }}</td>
-            <td><input type="time" value="{{ train.departure.hour }}:{{ train.departure.minute }}" id="timeOf{{ train.id }}"></td>
-            <td><button class = "edit_button" id="{{ train.id }}">Update Time</button><button class = "delete_button" id="{{ train.id }}">Delete</button></td>
+        <tr id="dataOf{{ train.0.id }}">
+            <td id="sourceOf{{ train.0.id }}">{{ train.0.source.name }}</td>
+            <td id="destinationOf{{ train.0.id }}">{{ train.0.destination.name }}</td>
+            <td><input type="time" value="{{ train.1 }}" id="timeOf{{ train.0.id }}"></td>
+            <td><button class = "edit_button" id="{{ train.0.id }}">Update Time</button><button class = "delete_button" id="{{ train.0.id }}">Delete</button></td>
         </tr>
     {% endfor %}
 </table>
