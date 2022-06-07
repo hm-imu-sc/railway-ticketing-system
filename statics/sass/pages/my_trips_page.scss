@@ -1,0 +1,70 @@
+@import "../utils/_variables";
+@import "../layouts/_navbar";
+@import "../utils/_scroll";
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 7%;
+    color: $color_default;
+    border-top: 3px solid $color_default;
+    border-bottom: 3px solid $color_default;
+    padding: 20px;
+    width: 620px;
+    margin: 7% auto 30px;
+}
+
+.trips {
+    margin: 0 auto;
+    width: 95%;
+
+    h2 {
+        color: $color_default;
+        font-size: 30px;
+        text-align: left;
+        margin: 20px 20px;
+    }
+
+    table {
+        width: 100%;
+        border: 2px solid $color_default;
+        border-radius: 10px;
+        overflow: hidden;
+
+        th, td {
+            border: 1px solid $color_default;
+            padding: 15px 30px;
+            text-align: center;
+            color: $color_default;
+
+            i {
+                font-size: 30px;
+                color: $color_default;
+            }
+        }
+
+        td:last-child {
+            a {
+                cursor: pointer;
+
+                i {
+                    border: 1px solid $color_default;
+                    border-radius: 5px;
+                    padding: 10px 30px;
+                    font-size: 35px;
+                }  
+                
+                &:hover {
+                    background-color: $color_default;
+                }
+
+                &:hover i {
+                    background-color: $color_default;
+                    color: rgb(4, 31, 4);
+                }
+            }
+        }
+    }    
+}
+
+

@@ -20,18 +20,18 @@
             <div>
                 <label for="depart_from">Depart from:</label>
                 <select name="depart_from" id="depart_from">
-                    <option value="0">Select</option>
+                    <option value="-1">Select</option>
                     {% for station in stations %}
-                        <option value="{{ station }}">{{ station }}</option>
+                        <option value="{{ station.id }}">{{ station.location }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <label for="destination">Destination:</label>
                 <select name="destination" id="destination">
-                    <option value="0">Select</option>
+                    <option value="-1">Select</option>
                     {% for station in stations %}
-                        <option value="{{ station }}">{{ station }}</option>
+                        <option value="{{ station.id }}">{{ station.location }}</option>
                     {% endfor %}
                 </select>
             </div>
